@@ -2,16 +2,18 @@
 #ifndef BITMAP_SENTRY
 #define BITMAP_SENTRY
 
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 typedef struct tag_pixel {
-    uint8_t r, g, b;
+  uint8_t r, g, b;
 } pixel_t;
 
 typedef struct tag_bitmap {
-    pixel_t *pixels;
-    size_t width, height;
+  pixel_t *pixels;
+  size_t width, height;
 } bitmap_t;
+
+pixel_t *pixel_at(bitmap_t *bitmap, int x, int y);
 
 #endif
