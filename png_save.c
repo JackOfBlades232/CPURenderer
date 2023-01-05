@@ -49,19 +49,27 @@ int save_bitmap_to_png(bitmap_t *bitmap, const char *path)
 
     fp = fopen(path, FILEMODE);
 
-    if (!fp)
+    if (!fp) {
+        perror(path);
         goto return_status;
+    }
 
     png_ptr = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
-    if (!png_ptr)
+    if (!png_ptr) {
+        fprintf(stderr, "Failed to create png write struct\n");
         goto close_file;
+    }
     
     info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr)
+    if (!info_ptr) {
+        fprintf(stderr, "Failed to create png info struct\n");
         goto destroy_write_struct;
+    }
 
-    if (setjmp(png_jmpbuf(png_ptr)))
+    if (setjmp(png_jmpbuf(png_ptr))) {
+        fprintf(stderr, "Failed to write png\n");
         goto destroy_write_struct;
+    }
 
     png_init_io(png_ptr, fp);
 
