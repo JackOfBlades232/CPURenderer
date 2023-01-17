@@ -77,7 +77,7 @@ int render(const scene *s, const camera *c, bitmap_t *bm)
                 vec3d color;
 
                 normal = get_normal(intersection, obj);
-                color = shade(intersection, normal, obj, s);
+                color = shade(intersection, normal, c->pos, obj, s);
                 set_img_pixel(imgp, color, x, y);
             } else
                 set_img_pixel(imgp, create_vec(0, 0, 0), x, y);

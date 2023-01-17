@@ -77,6 +77,7 @@ int test_sphere()
     s.objects_cnt = 1;
     s.objects[0].type = sphere;
     s.objects[0].data.s = create_sphere(1, 1, -2.5, 0.5);
+    s.objects[0].mat.ka = create_vec(0, 1, 1);
 
     c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 

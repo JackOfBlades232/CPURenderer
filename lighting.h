@@ -5,6 +5,7 @@
 #include "geom.h"
 #include "scene.h"
 
-vec3d shade(vec3d point, vec3d normal, const scene_obj *obj, const scene *s);
+vec3d shade(vec3d point, vec3d normal, vec3d view_point,
+        const scene_obj *obj, const scene *s);
 
 #endif 
