@@ -3,7 +3,7 @@
 #define CAMERA_SENTRY
 
 #include "geom.h"
-#include "bitmap.h"
+#include "image.h"
 
 typedef struct tag_camera {
     vec3d pos, dir, up;
@@ -15,6 +15,6 @@ camera create_camera(double pos_x, double pos_y, double pos_z,
         double up_x, double up_y, double up_z, 
         double fov, double foc_l);
 
-ray trace_camera_ray(camera *c, size_t x, size_t y, bitmap_t *img);
+ray trace_camera_ray(const camera *c, size_t x, size_t y, image *img);
 
 #endif 

@@ -28,14 +28,18 @@ vec3d sum(vec3d v1, vec3d v2);
 vec3d sum3(vec3d v1, vec3d v2, vec3d v3);
 vec3d subtr(vec3d v1, vec3d v2);
 vec3d mul(vec3d v, double coeff);
+vec3d powv(vec3d v, double p);
 vec3d normalized(vec3d v);
 vec3d prod(vec3d v1, vec3d v2);
 double dot(vec3d v1, vec3d v2);
+vec3d mulv(vec3d v1, vec3d v2);
+vec3d divv(vec3d v1, vec3d v2);
 
 sphere_obj create_sphere(double cx, double cy, double cz, double r);
 vec3d get_sphere_normal(vec3d point, sphere_obj s);
 int intersect_with_sphere(ray r, sphere_obj s, vec3d *out, double *dist);
             
+vec3d get_triangle_normal(vec3d point, triangle_obj tr);
 int intersect_with_triangle(ray r, triangle_obj s, vec3d *out, double *dist);
 
 #endif 

@@ -5,7 +5,7 @@
 #include "geom.h"
 #include "camera.h"
 #include "bitmap.h"
-#include "stddef.h"
+#include <stddef.h>
 
 typedef struct tag_material {
     vec3d ka, kd, ks, ke;
@@ -15,7 +15,7 @@ typedef struct tag_material {
 
 typedef struct tag_light_src {
     vec3d pos;
-    vec3d i;
+    vec3d illum;
 } light_src;
 
 typedef struct tag_scene_obj {
@@ -33,6 +33,6 @@ typedef struct tag_scene {
     size_t lights_cnt, objects_cnt;
 } scene;
 
-int render(scene *s, camera *c, bitmap_t *bm);
+int render(const scene *s, const camera *c, bitmap_t *bm);
 
 #endif 

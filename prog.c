@@ -2,6 +2,7 @@
 #include "geom.h"
 #include "scene.h"
 #include "bitmap.h"
+#include "image.h"
 #include "camera.h"
 #include "png_save.h"
 #include <stddef.h>
@@ -45,16 +46,16 @@ int create_noise_img()
 void test_camera_tracing()
 {
     camera c;
-    bitmap_t bm;
+    image img;
     size_t i, j;
 
-    bm.width = 19;
-    bm.height = 11;
+    img.width = 19;
+    img.height = 11;
     c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 
-    for (i = 0; i < bm.width; i++)
-        for (j = 0; j < bm.height; j++) {
-            ray r = trace_camera_ray(&c, i, j, &bm);
+    for (i = 0; i < img.width; i++)
+        for (j = 0; j < img.height; j++) {
+            ray r = trace_camera_ray(&c, i, j, &img);
             printf("(%ld, %ld): ro (%lf, %lf, %lf), rd (%lf, %lf, %lf)\n",
                     i, j, r.orig.x, r.orig.y, r.orig.z, 
                     r.dir.x, r.dir.y, r.dir.z); 
@@ -75,7 +76,7 @@ int test_sphere()
     s.objects = malloc(sizeof(scene_obj));
     s.objects_cnt = 1;
     s.objects[0].type = sphere;
-    s.objects[0].data.s = create_sphere(0, 0, -2.5, 0.5);
+    s.objects[0].data.s = create_sphere(1, 1, -2.5, 0.5);
 
     c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 

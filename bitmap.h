@@ -14,7 +14,8 @@ typedef struct tag_bitmap {
     size_t width, height;
 } bitmap_t;
 
+pixel_t create_pixel(uint8_t r, uint8_t g, uint8_t b);
 pixel_t *pixel_at(bitmap_t *bitmap, int x, int y);
-void set_pixel(bitmap_t *bitmap, int x, int y, uint8_t r, uint8_t g, uint8_t b);
+void set_pixel(bitmap_t *bitmap, int x, int y, pixel_t pixel);
 
 #endif
