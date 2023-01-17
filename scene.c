@@ -58,12 +58,10 @@ int render(scene *s, camera *c, bitmap_t *bm)
             obj = find_closest_object(r, s, &intersection);
                         
             /* testing */
-            if (obj != NULL) {
-                printf("%ld %ld\n", x, y);
+            if (obj != NULL) 
                 set_pixel(bm, x, y, 255, 0, 0);
-            } else {
+            else
                 set_pixel(bm, x, y, 0, 0, 0);
-            }
         }
                 
 

@@ -3,6 +3,8 @@
 #include "geom.h"
 #include <math.h>
 
+#include <stdio.h>
+
 camera create_camera(double pos_x, double pos_y, double pos_z, 
         double dir_x, double dir_y, double dir_z,
         double up_x, double up_y, double up_z, 
@@ -23,18 +25,18 @@ camera create_camera(double pos_x, double pos_y, double pos_z,
     return c;
 }
 
-ray trace_camera_ray(camera *c, size_t x, size_t y, bitmap_t *img)
+ray trace_camera_ray(camera *c, size_t x, size_t y, bitmap_t *bm)
 {
     double x_d, y_d;
     double pixel_size;
     vec3d c_right;
     ray res;
 
-    x_d = (double)x - ((double)img->height)/2.0 + 0.5;
-    y_d = (double)y - ((double)img->width)/2.0 + 0.5;
+    x_d = (double)x - ((double)bm->width)/2.0 + 0.5;
+    y_d = (double)y - ((double)bm->height)/2.0 + 0.5;
 
     pixel_size = (2.0 * c->foc_l * tan(deg2rad(c->fov)/2.0)) /
-                 (double)img->height;
+                 (double)bm->height;
 
     c_right = prod(c->dir, c->up);
     

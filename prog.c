@@ -48,8 +48,8 @@ void test_camera_tracing()
     bitmap_t bm;
     size_t i, j;
 
-    bm.width = 10;
-    bm.height = 10;
+    bm.width = 19;
+    bm.height = 11;
     c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 
     for (i = 0; i < bm.width; i++)
@@ -61,7 +61,7 @@ void test_camera_tracing()
         }
 }
 
-int main()
+int test_sphere()
 {
     int status = 0;
     bitmap_t bm;
@@ -82,4 +82,9 @@ int main()
     status = render(&s, &c, &bm);
 
     return status ? save_bitmap_to_png(&bm, "./test.png") : 10;
+}
+
+int main()
+{
+    return test_sphere();
 }
