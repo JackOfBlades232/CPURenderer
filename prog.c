@@ -1,4 +1,6 @@
 /* testing */
+#include "geom.h"
+#include "scene.h"
 #include "bitmap.h"
 #include "camera.h"
 #include "png_save.h"
@@ -40,7 +42,7 @@ int create_noise_img()
     return save_bitmap_to_png(&bm, "./test.png");
 }
 
-int main()
+void test_camera_tracing()
 {
     camera c;
     bitmap_t bm;
@@ -57,6 +59,27 @@ int main()
                     i, j, r.orig.x, r.orig.y, r.orig.z, 
                     r.dir.x, r.dir.y, r.dir.z); 
         }
+}
 
-    return 0;
+int main()
+{
+    int status = 0;
+    bitmap_t bm;
+    scene s;
+    camera c;
+
+    bm.width = 1920;
+    bm.height = 1080;
+    bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
+
+    s.objects = malloc(sizeof(scene_obj));
+    s.objects_cnt = 1;
+    s.objects[0].type = sphere;
+    s.objects[0].data.s = create_sphere(0, 0, -2.5, 0.5);
+
+    c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+
+    status = render(&s, &c, &bm);
+
+    return status ? save_bitmap_to_png(&bm, "./test.png") : 10;
 }
