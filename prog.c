@@ -1,8 +1,12 @@
 /* testing */
+#include "bitmap.h"
+#include "camera.h"
+#include "png_save.h"
+#include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-#include "bitmap.h"
-#include "png_save.h"
+
+#include <stdio.h>
 
 uint8_t random_val()
 {
@@ -20,7 +24,7 @@ pixel_t random_pixel()
     return pixel;
 }
 
-int main()
+int create_noise_img()
 {
     bitmap_t bm;
     int i, j;
@@ -34,4 +38,25 @@ int main()
             *pixel_at(&bm, j, i) = random_pixel();
   
     return save_bitmap_to_png(&bm, "./test.png");
+}
+
+int main()
+{
+    camera c;
+    bitmap_t bm;
+    size_t i, j;
+
+    bm.width = 10;
+    bm.height = 10;
+    c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+
+    for (i = 0; i < bm.width; i++)
+        for (j = 0; j < bm.height; j++) {
+            ray r = trace_camera_ray(&c, i, j, &bm);
+            printf("(%ld, %ld): ro (%lf, %lf, %lf), rd (%lf, %lf, %lf)\n",
+                    i, j, r.orig.x, r.orig.y, r.orig.z, 
+                    r.dir.x, r.dir.y, r.dir.z); 
+        }
+
+    return 0;
 }

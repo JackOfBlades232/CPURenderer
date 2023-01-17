@@ -5,4 +5,4 @@ for FILENAME in ./*.c; do
     gcc -Wall -g -c $FILENAME
 done
 
-gcc *.o -lpng -o prog.out
+gcc *.o -lm -lpng -o prog.out
