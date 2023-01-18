@@ -125,8 +125,7 @@ int test_3_spheres()
     s.lights_cnt = 1;
     s.lights = malloc(sizeof(light_src));
 
-    //s.lights[0].pos = create_vec(-0.2, 0, 0.5);
-    s.lights[0].pos = create_vec(0, 5, -0.5);
+    s.lights[0].pos = create_vec(-0.2, 0, 0.5);
     s.lights[0].illum = create_vec(0.5, 0.5, 0.5);
 
     c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);

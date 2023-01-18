@@ -32,6 +32,8 @@ vec3d powv(vec3d v, double p);
 vec3d normalized(vec3d v);
 vec3d prod(vec3d v1, vec3d v2);
 double dot(vec3d v1, vec3d v2);
+double sq_len(vec3d v);
+double len(vec3d v);
 vec3d mulv(vec3d v1, vec3d v2);
 vec3d divv(vec3d v1, vec3d v2);
 

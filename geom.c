@@ -62,6 +62,16 @@ double dot(vec3d v1, vec3d v2)
     return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
 }
 
+double sq_len(vec3d v)
+{
+    return dot(v, v);
+}
+
+double len(vec3d v)
+{
+    return sqrt(sq_len(v));
+}
+
 vec3d mulv(vec3d v1, vec3d v2)
 {
     return create_vec(v1.x*v2.x, v1.y*v2.y, v1.z*v2.z);
@@ -90,28 +100,25 @@ int intersect_with_sphere(ray r, sphere_obj s, vec3d *out, double *dist)
     double a, b, c, root1, root2;
     int num_roots;
 
-    a = r.dir.x*r.dir.x + r.dir.y*r.dir.y + r.dir.z*r.dir.z;
-    b = 2 * (
-                r.dir.x*(r.orig.x-s.center.x) +
-                r.dir.y*(r.orig.y-s.center.y) + 
-                r.dir.z*(r.orig.z-s.center.z)
-            );
-    c = (r.orig.x-s.center.x)*(r.orig.x-s.center.x) + 
-        (r.orig.y-s.center.y)*(r.orig.y-s.center.y) + 
-        (r.orig.z-s.center.z)*(r.orig.z-s.center.z) -
-        s.rad*s.rad;
+    /* Solving ||(orig + k*dir) - center||^2 = rad^2 */
 
+    /* First, calculate coeff for this quadr equation */
+    a = sq_len(r.dir);
+    b = 2.0 * dot(r.dir, subtr(r.orig, s.center));
+    c = sq_len(subtr(r.orig, s.center)) - s.rad*s.rad;
+
+    /* Then, solve and choose minimal non-negative root, if it exists */
     num_roots = solve_qe(a, b, c, &root1, &root2);
 
     if (num_roots == 0)
         return 0;
-    else if (root1 >= 0) {
-        *out = sum(r.orig, mul(r.dir, root1));
+    else if (num_roots == 1)
         *dist = root1;
-        return 1;
-    } else if (root2 >= 0 && num_roots == 2) {
-        *out = sum(r.orig, mul(r.dir, root2));
-        *dist = root2;
+    else
+        *dist = min_non_neg(root1, root2);
+
+    if (*dist >= 0) {
+        *out = sum(r.orig, mul(r.dir, *dist));
         return 1;
     }
 
@@ -123,7 +130,7 @@ vec3d get_triangle_normal(vec3d point, triangle_obj tr)
     return create_vec(0, 0, 0);
 }
 
-int intersect_with_triangle(ray r, triangle_obj s, vec3d *out, double *dist)
+int intersect_with_triangle(ray r, triangle_obj tr, vec3d *out, double *dist)
 {
     return 0;
 }

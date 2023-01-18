@@ -7,6 +7,16 @@ double max(double a, double b)
     return a > b ? a : b;
 }
 
+double min(double a, double b)
+{
+    return a < b ? a : b;
+}
+
+double min_non_neg(double a, double b)
+{
+    return a < 0 || b < 0 ? max(a, b) : min(a, b);
+}
+
 void swap_dbl(double *a, double *b)
 {
     double tmp;
@@ -27,15 +37,12 @@ int solve_qe(double a, double b, double c, double *r1, double *r2)
     if (d < 0)
         return 0;
     else if (d == 0) {
-        *r1 = -b / (2*a);
+        *r1 = -b/(2*a);
         return 1;
     } else {
         d = sqrt(d);
         *r1 = (-b-d)/(2*a);
         *r2 = (-b+d)/(2*a);
-        if (*r1 > *r2) 
-            swap_dbl(r1, r2);
-        
         return 2;
     }
 }
