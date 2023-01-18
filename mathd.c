@@ -2,6 +2,11 @@
 #include "mathd.h"
 #include <math.h>
 
+double max(double a, double b)
+{
+    return a > b ? a : b;
+}
+
 void swap_dbl(double *a, double *b)
 {
     double tmp;

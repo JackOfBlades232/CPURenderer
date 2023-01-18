@@ -7,7 +7,7 @@
 #include "lighting.h"
 #include <float.h>
 
-static int intersect_ray(ray r, const scene_obj *obj, vec3d *out, double *dist)
+int intersect_ray(ray r, const scene_obj *obj, vec3d *out, double *dist)
 {
     switch (obj->type) {
         case sphere:

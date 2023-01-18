@@ -86,7 +86,57 @@ int test_sphere()
     return status ? save_bitmap_to_png(&bm, "./test.png") : 10;
 }
 
+int test_3_spheres()
+{
+    int status = 0;
+    bitmap_t bm;
+    scene s;
+    camera c;
+
+    bm.width = 1920;
+    bm.height = 1080;
+    bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
+
+    s.objects = malloc(3 * sizeof(scene_obj));
+    s.objects_cnt = 3;
+    
+    s.objects[0].type = sphere;
+    s.objects[0].data.s = create_sphere(0, 0, -0.5, 0.15);
+    s.objects[0].mat.ka = create_vec(0, 0, 0);
+    s.objects[0].mat.ke = create_vec(0, 0, 0);
+    s.objects[0].mat.kd = create_vec(0.5, 0, 0);
+    s.objects[0].mat.ks = create_vec(0, 0, 0);
+
+    s.objects[1].type = sphere;
+    s.objects[1].data.s = create_sphere(-0.35, 0, -0.5, 0.15);
+    s.objects[1].mat.ka = create_vec(0.5, 0, 0);
+    s.objects[1].mat.ke = create_vec(0, 0, 0);
+    s.objects[1].mat.kd = create_vec(0, 0, 0);
+    s.objects[1].mat.ks = create_vec(0, 0, 0);
+
+    s.objects[2].type = sphere;
+    s.objects[2].data.s = create_sphere(0.4, 0, -0.5, 0.15);
+    s.objects[2].mat.ka = create_vec(0.05, 0, 0);
+    s.objects[2].mat.ke = create_vec(0, 0, 0);
+    s.objects[2].mat.kd = create_vec(0, 0, 0);
+    s.objects[2].mat.ks = create_vec(0.5, 0, 0);
+    s.objects[2].mat.ns = 500;
+
+    s.lights_cnt = 1;
+    s.lights = malloc(sizeof(light_src));
+
+    //s.lights[0].pos = create_vec(-0.2, 0, 0.5);
+    s.lights[0].pos = create_vec(0, 5, -0.5);
+    s.lights[0].illum = create_vec(0.5, 0.5, 0.5);
+
+    c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+
+    status = render(&s, &c, &bm);
+
+    return status ? save_bitmap_to_png(&bm, "./test.png") : 10;
+}
+
 int main()
 {
-    return test_sphere();
+    return test_3_spheres();
 }

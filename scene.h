@@ -33,6 +33,7 @@ typedef struct tag_scene {
     size_t lights_cnt, objects_cnt;
 } scene;
 
+int intersect_ray(ray r, const scene_obj *obj, vec3d *out, double *dist);
 int render(const scene *s, const camera *c, bitmap_t *bm);
 
 #endif 
