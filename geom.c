@@ -17,6 +17,11 @@ vec3d create_vec(double x, double y, double z)
     return v;
 }
 
+vec3d zero_vec()
+{
+    return create_vec(0, 0, 0);
+}
+
 vec3d sum(vec3d v1, vec3d v2)
 {
     return create_vec(v1.x+v2.x, v1.y+v2.y, v1.z+v2.z);
@@ -80,6 +85,13 @@ vec3d mulv(vec3d v1, vec3d v2)
 vec3d divv(vec3d v1, vec3d v2)
 {
     return create_vec(v1.x/v2.x, v1.y/v2.y, v1.z/v2.z);
+}
+
+vec3d reflect(vec3d v, vec3d normal)
+{
+    double n_v;
+    n_v = dot(v, normal);
+    return subtr(mul(normal, 2.0*n_v), v);
 }
 
 sphere_obj create_sphere(double cx, double cy, double cz, double r)

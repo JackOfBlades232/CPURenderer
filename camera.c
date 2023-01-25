@@ -17,7 +17,7 @@ camera create_camera(double pos_x, double pos_y, double pos_z,
     return c;
 }
 
-ray trace_camera_ray(const camera *c, size_t x, size_t y, image *img)
+ray get_camera_ray(const camera *c, size_t x, size_t y, image *img)
 {
     double x_d, y_d;
     double pixel_size;

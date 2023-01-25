@@ -55,7 +55,7 @@ void test_camera_tracing()
 
     for (i = 0; i < img.width; i++)
         for (j = 0; j < img.height; j++) {
-            ray r = trace_camera_ray(&c, i, j, &img);
+            ray r = get_camera_ray(&c, i, j, &img);
             printf("(%ld, %ld): ro (%lf, %lf, %lf), rd (%lf, %lf, %lf)\n",
                     i, j, r.orig.x, r.orig.y, r.orig.z, 
                     r.dir.x, r.dir.y, r.dir.z); 

@@ -24,6 +24,7 @@ typedef struct tag_triangle_obj {
 double deg2rad(double deg);
 
 vec3d create_vec(double x, double y, double z);
+vec3d zero_vec();
 vec3d sum(vec3d v1, vec3d v2);
 vec3d sum3(vec3d v1, vec3d v2, vec3d v3);
 vec3d subtr(vec3d v1, vec3d v2);
@@ -36,6 +37,8 @@ double sq_len(vec3d v);
 double len(vec3d v);
 vec3d mulv(vec3d v1, vec3d v2);
 vec3d divv(vec3d v1, vec3d v2);
+
+vec3d reflect(vec3d v, vec3d normal);
 
 sphere_obj create_sphere(double cx, double cy, double cz, double r);
 vec3d get_sphere_normal(vec3d point, sphere_obj s);

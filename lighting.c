@@ -46,11 +46,10 @@ static vec3d specular_illum(const scene_obj *obj, const light_src *l,
         vec3d point, vec3d normal, vec3d view_point)
 {
     vec3d vl, vr, ve;
-    double n_vl, scal;
+    double scal;
 
     vl = normalized(subtr(l->pos, point));
-    n_vl = dot(vl, normal);
-    vr = subtr(mul(normal, 2.0*n_vl), vl);
+    vr = reflect(vl, normal);
 
     ve = normalized(subtr(view_point, point));
     scal = max(0, dot(vr, ve));
@@ -58,8 +57,20 @@ static vec3d specular_illum(const scene_obj *obj, const light_src *l,
     return mul(mulv(obj->mat.ks, l->illum), pow(scal, obj->mat.ns));
 }
 
+static vec3d reflect_illum(const scene_obj *obj, const scene *s, 
+        vec3d point, vec3d normal, vec3d view_point, int cur_depth)
+{
+    return zero_vec();
+}
+
+static vec3d refract_illum(const scene_obj *obj, const scene *s, 
+        vec3d point, vec3d normal, vec3d view_point, int cur_depth)
+{
+    return zero_vec();
+}
+
 vec3d shade(vec3d point, vec3d normal, vec3d view_point,
-        const scene_obj *obj, const scene *s)
+        const scene_obj *obj, const scene *s, int cur_depth)
 {
     vec3d color;
     int i;
@@ -76,6 +87,14 @@ vec3d shade(vec3d point, vec3d normal, vec3d view_point,
                 specular_illum(obj, l, point, normal, view_point)
             );
         }
+    }
+
+    if (cur_depth < max_depth) {
+        color = sum3(
+            color,
+            reflect_illum(obj, s, point, normal, view_point, cur_depth),
+            refract_illum(obj, s, point, normal, view_point, cur_depth)
+        );
     }
 
     return color;

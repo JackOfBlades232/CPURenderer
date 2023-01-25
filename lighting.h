@@ -6,6 +6,6 @@
 #include "scene.h"
 
 vec3d shade(vec3d point, vec3d normal, vec3d view_point,
-        const scene_obj *obj, const scene *s);
+        const scene_obj *obj, const scene *s, int cur_depth);
 
 #endif 

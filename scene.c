@@ -56,31 +56,35 @@ static scene_obj *find_closest_object(ray r, const scene *s, vec3d *pos_out)
     return closest;
 }
 
+vec3d trace_ray(ray r, const scene *s, const camera *c, int cur_depth)
+{
+    scene_obj *hit_obj;
+    vec3d hit_point, hit_normal;
+
+    hit_obj = find_closest_object(r, s, &hit_point);
+
+    if (!hit_obj)
+        return zero_vec();
+
+    hit_normal = get_normal(hit_point, hit_obj);
+    return shade(hit_point, hit_normal, c->pos, hit_obj, s, cur_depth);
+}
+
 int render(const scene *s, const camera *c, bitmap_t *bm)
 {
     image *imgp;
     size_t x, y;
     ray r;
+    vec3d color;
 
     imgp = create_image(bm->width, bm->height);
 
     for (x = 0; x < imgp->width; x++)
         for (y = 0; y < imgp->height; y++) {
-            scene_obj *obj = NULL;
-            vec3d intersection;
+            r = get_camera_ray(c, x, y, imgp);
+            color = trace_ray(r, s, c, 0);
 
-            r = trace_camera_ray(c, x, y, imgp);
-            obj = find_closest_object(r, s, &intersection);
-                        
-            if (obj != NULL) {
-                vec3d normal;
-                vec3d color;
-
-                normal = get_normal(intersection, obj);
-                color = shade(intersection, normal, c->pos, obj, s);
-                set_img_pixel(imgp, color, x, y);
-            } else
-                set_img_pixel(imgp, create_vec(0, 0, 0), x, y);
+            set_img_pixel(imgp, color, x, y);
         }
 
     post_process(imgp);
