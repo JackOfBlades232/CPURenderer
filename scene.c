@@ -7,6 +7,8 @@
 #include "lighting.h"
 #include <float.h>
 
+#include "debug.h"
+
 int intersect_ray(ray r, const scene_obj *obj, vec3d *out, double *dist)
 {
     switch (obj->type) {
@@ -19,13 +21,13 @@ int intersect_ray(ray r, const scene_obj *obj, vec3d *out, double *dist)
     return 0;
 }
 
-static vec3d get_normal(vec3d point, const scene_obj *obj)
+static vec3d get_normal(vec3d point, const scene_obj *obj, vec3d view_point)
 {
     switch (obj->type) {
         case sphere:
             return get_sphere_normal(point, obj->data.s);
         case triangle:
-            return get_triangle_normal(point, obj->data.tr);
+            return get_triangle_normal(point, obj->data.tr, view_point);
     }
 
     return create_vec(0, 0, 0);
@@ -66,7 +68,7 @@ vec3d trace_ray(ray r, const scene *s, const camera *c, int cur_depth)
     if (!hit_obj)
         return zero_vec();
 
-    hit_normal = get_normal(hit_point, hit_obj);
+    hit_normal = get_normal(hit_point, hit_obj, c->pos);
     return shade(hit_point, hit_normal, c->pos, hit_obj, s, cur_depth);
 }
 

@@ -8,8 +8,9 @@
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
-
 #include <stdio.h>
+
+#include "debug.h"
 
 uint8_t random_val()
 {
@@ -32,8 +33,8 @@ int create_noise_img()
     bitmap_t bm;
     int i, j;
 
-    bm.width = 1920;
-    bm.height = 1080;
+    bm.width = 640;
+    bm.height = 480;
     bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
 
     for (i = 0; i < bm.height; i++)
@@ -69,8 +70,8 @@ int test_sphere()
     scene s;
     camera c;
 
-    bm.width = 1920;
-    bm.height = 1080;
+    bm.width = 640;
+    bm.height = 480;
     bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
 
     s.objects = malloc(sizeof(scene_obj));
@@ -93,8 +94,8 @@ int test_3_spheres()
     scene s;
     camera c;
 
-    bm.width = 1920;
-    bm.height = 1080;
+    bm.width = 640;
+    bm.height = 480;
     bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
 
     s.objects = malloc(3 * sizeof(scene_obj));
@@ -135,7 +136,42 @@ int test_3_spheres()
     return status ? save_bitmap_to_png(&bm, "./test.png") : 10;
 }
 
+int test_triangle()
+{
+    int status = 0;
+    bitmap_t bm;
+    scene s;
+    camera c;
+
+    bm.width = 640;
+    bm.height = 480;
+    bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
+
+    s.objects = malloc(sizeof(scene_obj));
+    s.objects_cnt = 1;
+    
+    s.objects[0].type = triangle;
+    s.objects[0].data.tr = create_triangle(-1, 0, 0, 0, -5, -5, 1, 0, 0);
+    s.objects[0].mat.ka = create_vec(0, 0, 0);
+    s.objects[0].mat.ke = create_vec(0, 0, 0);
+    s.objects[0].mat.kd = create_vec(0, 0, 1);
+    s.objects[0].mat.ks = create_vec(0, 1, 0);
+    s.objects[0].mat.ns = 1000;
+
+    s.lights_cnt = 1;
+    s.lights = malloc(sizeof(light_src));
+
+    s.lights[0].pos = create_vec(0, 2, -0.5);
+    s.lights[0].illum = create_vec(1, 1, 1);
+
+    c = create_camera(0, 2, 0, 0, -1, 0, 0, 0, -1, 90, 1);
+
+    status = render(&s, &c, &bm);
+
+    return status ? save_bitmap_to_png(&bm, "./test.png") : 10;
+}
+
 int main()
 {
-    return test_3_spheres();
+    return test_triangle();
 }
