@@ -13,9 +13,9 @@ int intersect_ray(ray r, const scene_obj *obj, vec3d *out, double *dist)
 {
     switch (obj->type) {
         case sphere:
-            return intersect_with_sphere(r, obj->data.s, out, dist);
+            return intersect_with_sphere(r, &(obj->data.s), out, dist);
         case triangle:
-            return intersect_with_triangle(r, obj->data.tr, out, dist);
+            return intersect_with_triangle(r, &(obj->data.tr), out, dist);
     }
 
     return 0;
@@ -25,9 +25,9 @@ static vec3d get_normal(vec3d point, const scene_obj *obj, vec3d view_point)
 {
     switch (obj->type) {
         case sphere:
-            return get_sphere_normal(point, obj->data.s);
+            return get_sphere_normal(point, &(obj->data.s));
         case triangle:
-            return get_triangle_normal(point, obj->data.tr, view_point);
+            return get_triangle_normal(point, &(obj->data.tr), view_point);
     }
 
     return vec3d_literal(0, 0, 0);

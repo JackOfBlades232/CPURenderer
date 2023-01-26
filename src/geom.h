@@ -44,13 +44,16 @@ vec3d vec3d_div(vec3d v1, vec3d v2);
 vec3d vec3d_reflect(vec3d v, vec3d normal);
 
 sphere_obj sphere_literal(double cx, double cy, double cz, double r);
-vec3d get_sphere_normal(vec3d point, sphere_obj s);
-int intersect_with_sphere(ray r, sphere_obj s, vec3d *out, double *dist);
+vec3d get_sphere_normal(vec3d point, const sphere_obj *s);
+int intersect_with_sphere(ray r, const sphere_obj *s, 
+        vec3d *out, double *dist);
             
 triangle_obj trianlge_literal(double x1, double y1, double z1,
                              double x2, double y2, double z2,
                              double x3, double y3, double z3);
-vec3d get_triangle_normal(vec3d point, triangle_obj tr, vec3d view_point);
-int intersect_with_triangle(ray r, triangle_obj s, vec3d *out, double *dist);
+vec3d get_triangle_normal(vec3d point, const triangle_obj *tr, 
+        vec3d view_point);
+int intersect_with_triangle(ray r, const triangle_obj *tr, 
+        vec3d *out, double *dist);
 
 #endif 

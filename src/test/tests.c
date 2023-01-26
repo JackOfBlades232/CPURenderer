@@ -41,7 +41,7 @@ int create_noise_img()
         for (j = 0; j < bm.width; j++)
             *pixel_at(&bm, j, i) = random_pixel();
   
-    return save_bitmap_to_png(&bm, "./test.png");
+    return save_bitmap_to_png(&bm, "./test_noise.png");
 }
 
 void test_camera_tracing()
@@ -84,7 +84,7 @@ int test_sphere()
 
     status = render(&s, &c, &bm);
 
-    return status ? save_bitmap_to_png(&bm, "./test.png") : 10;
+    return status ? save_bitmap_to_png(&bm, "./test_sphere.png") : 10;
 }
 
 int test_3_spheres()
@@ -133,7 +133,7 @@ int test_3_spheres()
 
     status = render(&s, &c, &bm);
 
-    return status ? save_bitmap_to_png(&bm, "./test.png") : 10;
+    return status ? save_bitmap_to_png(&bm, "./test_3_spheres.png") : 10;
 }
 
 int test_triangle()
@@ -168,10 +168,12 @@ int test_triangle()
 
     status = render(&s, &c, &bm);
 
-    return status ? save_bitmap_to_png(&bm, "./test.png") : 10;
+    return status ? save_bitmap_to_png(&bm, "./test_triangle.png") : 10;
 }
 
 int main()
 {
-    return test_3_spheres();
+    test_3_spheres();
+    test_triangle();
+    return 0;
 }
