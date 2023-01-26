@@ -37,12 +37,12 @@ int solve_qe(double a, double b, double c, double *r1, double *r2)
     if (d < 0)
         return 0;
     else if (d == 0) {
-        *r1 = -b/(2*a);
+        *r1 = -b / (2.0*a);
         return 1;
     } else {
         d = sqrt(d);
-        *r1 = (-b-d)/(2*a);
-        *r2 = (-b+d)/(2*a);
+        *r1 = (-b-d) / (2.0*a);
+        *r2 = (-b+d) / (2.0*a);
         return 2;
     }
 }
@@ -50,24 +50,4 @@ int solve_qe(double a, double b, double c, double *r1, double *r2)
 int dbl_is_zero(double x)
 {
     return x > -EPSILON && x < EPSILON;
-}
-
-static double det3(vec3d c1, vec3d c2, vec3d c3)
-{
-    return dot(c1, prod(c2, c3));
-}
-
-int solve_3_linear_eq(vec3d c1, vec3d c2, vec3d c3, vec3d b, vec3d *sol)
-{
-    double main_det;
-
-    main_det = det3(c1, c2, c3);
-    if (dbl_is_zero(main_det))
-        return 0;
-
-    sol->x = det3(b, c2, c3) / main_det;
-    sol->y = det3(c1, b, c3) / main_det;
-    sol->z = det3(c1, c2, b) / main_det;
-
-    return 1;
 }
