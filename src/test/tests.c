@@ -63,14 +63,17 @@ int test_sphere()
     image img;
     scene s;
     camera c;
+    material m;
 
     alloc_image(&img, 640, 480);
+
+    m = material_literal(0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 
     s.objects = malloc(sizeof(scene_obj));
     s.objects_cnt = 1;
     s.objects[0].type = sphere;
     s.objects[0].data.s = sphere_literal(1, 1, -2.5, 0.5);
-    s.objects[0].mat.ka = vec3d_literal(0, 1, 1);
+    s.objects[0].mat = &m;
 
     c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 
@@ -87,33 +90,29 @@ int test_3_spheres()
     image img;
     scene s;
     camera c;
+    material m1, m2, m3;
 
     alloc_image(&img, 640, 480);
+
+    m1 = material_literal(0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    m2 = material_literal(0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+    m3 = material_literal(0.05, 0, 0, 0, 0, 0, 0, 0, 0,
+            0.5, 0, 0, 500, 0, 0, 0, 0);
 
     s.objects = malloc(3 * sizeof(scene_obj));
     s.objects_cnt = 3;
     
     s.objects[0].type = sphere;
     s.objects[0].data.s = sphere_literal(0, 0, -0.5, 0.15);
-    s.objects[0].mat.ka = vec3d_literal(0, 0, 0);
-    s.objects[0].mat.ke = vec3d_literal(0, 0, 0);
-    s.objects[0].mat.kd = vec3d_literal(0.5, 0, 0);
-    s.objects[0].mat.ks = vec3d_literal(0, 0, 0);
+    s.objects[0].mat = &m1;
 
     s.objects[1].type = sphere;
     s.objects[1].data.s = sphere_literal(-0.35, 0, -0.5, 0.15);
-    s.objects[1].mat.ka = vec3d_literal(0.5, 0, 0);
-    s.objects[1].mat.ke = vec3d_literal(0, 0, 0);
-    s.objects[1].mat.kd = vec3d_literal(0, 0, 0);
-    s.objects[1].mat.ks = vec3d_literal(0, 0, 0);
+    s.objects[1].mat = &m2;
 
     s.objects[2].type = sphere;
     s.objects[2].data.s = sphere_literal(0.4, 0, -0.5, 0.15);
-    s.objects[2].mat.ka = vec3d_literal(0.05, 0, 0);
-    s.objects[2].mat.ke = vec3d_literal(0, 0, 0);
-    s.objects[2].mat.kd = vec3d_literal(0, 0, 0);
-    s.objects[2].mat.ks = vec3d_literal(0.5, 0, 0);
-    s.objects[2].mat.ns = 500;
+    s.objects[2].mat = &m3;
 
     s.lights_cnt = 1;
     s.lights = malloc(sizeof(light_src));
@@ -136,19 +135,18 @@ int test_triangle()
     image img;
     scene s;
     camera c;
+    material m;
 
     alloc_image(&img, 640, 480);
+
+    m = material_literal(0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1000, 0, 0, 0, 0);
 
     s.objects = malloc(sizeof(scene_obj));
     s.objects_cnt = 1;
     
     s.objects[0].type = triangle;
     s.objects[0].data.tr = trianlge_literal(-1, 0, 0, 0, -5, -5, 1, 0, 0);
-    s.objects[0].mat.ka = vec3d_literal(0, 0, 0);
-    s.objects[0].mat.ke = vec3d_literal(0, 0, 0);
-    s.objects[0].mat.kd = vec3d_literal(0, 0, 1);
-    s.objects[0].mat.ks = vec3d_literal(0, 1, 0);
-    s.objects[0].mat.ns = 1000;
+    s.objects[0].mat = &m;
 
     s.lights_cnt = 1;
     s.lights = malloc(sizeof(light_src));

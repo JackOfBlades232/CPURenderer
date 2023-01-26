@@ -24,6 +24,11 @@ vec3d vec3d_zero()
     return vec3d_literal(0, 0, 0);
 }
 
+vec3d vec3d_one()
+{
+    return vec3d_literal(1, 1, 1);
+}
+
 vec3d vec3d_neg(vec3d v)
 {
     return vec3d_literal(-v.x, -v.y, -v.z);

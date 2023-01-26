@@ -5,7 +5,7 @@
 #include "geom.h"
 #include "camera.h"
 #include "image.h"
-#include <stddef.h>
+#include <math.h>
 
 enum { max_depth = 2 };
 
@@ -22,7 +22,7 @@ typedef struct tag_light_src {
 
 typedef struct tag_scene_obj {
     object_type type;
-    material mat;
+    material *mat;
     union {
         sphere_obj s;
         triangle_obj tr;
@@ -35,8 +35,13 @@ typedef struct tag_scene {
     size_t lights_cnt, objects_cnt;
 } scene;
 
-int intersect_ray(ray r, const scene_obj *obj, vec3d *out, double *dist);
-vec3d trace_ray(ray r, const scene *s, const camera *c, int cur_depth);
+material material_literal(double ka_x, double ka_y, double ka_z,
+                          double ke_x, double ke_y, double ke_z,
+                          double kd_x, double kd_y, double kd_z,
+                          double ks_x, double ks_y, double ks_z,
+                          double ns, double ni,
+                          double al_x, double al_y, double al_z);
+
 int render(const scene *s, const camera *c, image *img);
 
 #endif 

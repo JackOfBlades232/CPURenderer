@@ -27,7 +27,7 @@ void set_img_pixel(image *img, vec3d color, size_t x, size_t y)
 
 static vec3d tone_map(vec3d color)
 {
-    return vec3d_div(color, vec3d_sum(color, vec3d_literal(1, 1, 1)));
+    return vec3d_div(color, vec3d_sum(color, vec3d_one()));
 }
 
 static vec3d gamma_correct(vec3d color)

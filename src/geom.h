@@ -26,6 +26,7 @@ double deg2rad(double deg);
 
 vec3d vec3d_literal(double x, double y, double z);
 vec3d vec3d_zero();
+vec3d vec3d_one();
 vec3d vec3d_neg(vec3d v);
 vec3d vec3d_sum(vec3d v1, vec3d v2);
 vec3d vec3d_sum3(vec3d v1, vec3d v2, vec3d v3);
