@@ -173,5 +173,5 @@ int test_triangle()
 
 int main()
 {
-    return test_triangle();
+    return test_3_spheres();
 }

@@ -35,7 +35,7 @@ static vec3d tone_map(vec3d color)
 
 static vec3d gamma_correct(vec3d color)
 {
-    return vec3d_powv(color, GAMMA_CORR_POW);
+    return vec3d_pow(color, GAMMA_CORR_POW);
 }
 
 static vec3d process_color(vec3d color)

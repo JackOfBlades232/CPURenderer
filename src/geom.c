@@ -36,7 +36,7 @@ vec3d vec3d_sum(vec3d v1, vec3d v2)
 
 vec3d vec3d_sum3(vec3d v1, vec3d v2, vec3d v3)
 {
-    return vec3d_sum(vec3d_sum(v1, v2), v3);
+    return vec3d_literal(v1.x+v2.x+v3.x, v1.y+v2.y+v3.y, v1.z+v2.z+v3.z);
 }
 
 vec3d vec3d_sub(vec3d v1, vec3d v2)
@@ -49,15 +49,9 @@ vec3d vec3d_scale(vec3d v, double coeff)
     return vec3d_literal(v.x*coeff, v.y*coeff, v.z*coeff);
 }
 
-vec3d vec3d_powv(vec3d v1, double p)
+vec3d vec3d_pow(vec3d v1, double p)
 {
     return vec3d_literal(pow(v1.x, p), pow(v1.y, p), pow(v1.z, p));
-}
-
-vec3d vec3d_normalized(vec3d v)
-{
-    double inv_vec3d_len = 1.0 / sqrt(v.x*v.x + v.y*v.y + v.z*v.z);
-    return vec3d_scale(v, inv_vec3d_len);
 }
 
 vec3d vec3d_cross(vec3d v1, vec3d v2)
@@ -74,14 +68,27 @@ double vec3d_dot(vec3d v1, vec3d v2)
     return v1.x*v2.x + v1.y*v2.y + v1.z*v2.z;
 }
 
-double vec3d_sq_vec3d_len(vec3d v)
+double vec3d_sq_len(vec3d v)
 {
     return vec3d_dot(v, v);
 }
 
 double vec3d_len(vec3d v)
 {
-    return sqrt(vec3d_sq_vec3d_len(v));
+    return sqrt(vec3d_sq_len(v));
+}
+
+vec3d vec3d_normalized(vec3d v)
+{
+    return vec3d_scale(v, 1.0 / vec3d_len(v));
+}
+
+void vec3d_normalize(vec3d *v)
+{
+    double inv_len = 1.0 / vec3d_len(*v);
+    v->x /= inv_len;
+    v->y /= inv_len;
+    v->z /= inv_len;
 }
 
 vec3d vec3d_mul(vec3d v1, vec3d v2)
@@ -116,15 +123,18 @@ vec3d get_sphere_normal(vec3d point, sphere_obj s)
 
 int intersect_with_sphere(ray r, sphere_obj s, vec3d *out, double *dist)
 {
+    vec3d vec_to_s_center;
     double a, b, c, root1, root2;
     int num_roots;
 
     /* Solving ||(orig + k*dir) - center||^2 = rad^2 */
 
     /* First, calculate coeff for this quadr equation */
-    a = vec3d_sq_vec3d_len(r.dir);
-    b = 2.0 * vec3d_dot(r.dir, vec3d_sub(r.orig, s.center));
-    c = vec3d_sq_vec3d_len(vec3d_sub(r.orig, s.center)) - s.rad*s.rad;
+    vec_to_s_center = vec3d_sub(r.orig, s.center);
+
+    a = vec3d_sq_len(r.dir);
+    b = 2.0 * vec3d_dot(r.dir, vec_to_s_center);
+    c = vec3d_sq_len(vec_to_s_center) - s.rad*s.rad;
 
     /* Then, solve and choose minimal non-vec3d_negative root, if it exists */
     num_roots = solve_qe(a, b, c, &root1, &root2);
@@ -146,7 +156,12 @@ int intersect_with_sphere(ray r, sphere_obj s, vec3d *out, double *dist)
 
 static vec3d calculate_triangle_normal(triangle_obj tr)
 {
-    return vec3d_normalized(vec3d_cross(vec3d_sub(tr.v2, tr.v1), vec3d_sub(tr.v3, tr.v1)));
+    return vec3d_normalized(
+            vec3d_cross(
+                vec3d_sub(tr.v2, tr.v1), 
+                vec3d_sub(tr.v3, tr.v1)
+                )
+            );
 }
 
 triangle_obj trianlge_literal(double x1, double y1, double z1,
@@ -163,6 +178,7 @@ triangle_obj trianlge_literal(double x1, double y1, double z1,
 
 vec3d get_triangle_normal(vec3d point, triangle_obj tr, vec3d view_point)
 {
+    /* return the normal for the side facing the viewer */
     return vec3d_dot(tr.normal, vec3d_sub(view_point, point)) > 0.0 ?
         tr.normal :
         vec3d_neg(tr.normal);
@@ -170,31 +186,41 @@ vec3d get_triangle_normal(vec3d point, triangle_obj tr, vec3d view_point)
 
 int intersect_with_triangle(ray r, triangle_obj tr, vec3d *out, double *dist)
 {
-    vec3d e1, e2;
+    vec3d edge1, edge2;
     vec3d h, s, q;
     double a, f, u, v;
     double t;
 
-    e1 = vec3d_sub(tr.v2, tr.v1);
-    e2 = vec3d_sub(tr.v3, tr.v1);
+    edge1 = vec3d_sub(tr.v2, tr.v1);
+    edge2 = vec3d_sub(tr.v3, tr.v1);
 
-    h = vec3d_cross(r.dir, e2);
-    a = vec3d_dot(e1, h);
-    if (dbl_is_zero(a))
+    /* Check if ray is parallel to triangle plane (or, if normal to plane 
+     * of ray dir and second edge is perpendicular to first edge */
+
+    h = vec3d_cross(r.dir, edge2); /* perp to plane of ray dir and edge 1 */
+    a = vec3d_dot(edge1, h); /* cosine of the angle (scaled by lengths) */
+    if (dbl_is_zero(a)) /* if cosine == 0, then parallel => no intersetion */
         return 0;
+
+    /* Now, we solve the linear system (-ray.dir, edge1, edge2)(t, u, v) = 
+     * ray.orig - v1 to obtain uv-coords of intersection 
+     * and t -- it's ray coord. We solve it by Cramer Rule. */ 
+
+    /* For the point to be in the triangle, uv-coords must be >= 0 and their
+     * sum must be no more than 1 */
 
     f = 1.0/a;
     s = vec3d_sub(r.orig, tr.v1);
     u = f * vec3d_dot(s, h);
-    if (u < 0.0 || u > 1.0)
+    if (u < 0.0 || u > 1.0) 
         return 0;
 
-    q = vec3d_cross(s, e1);
+    q = vec3d_cross(s, edge1);
     v = f * vec3d_dot(r.dir, q);
     if (v < 0.0 || u+v > 1.0)
         return 0;
 
-    t = f * vec3d_dot(e2, q);
+    t = f * vec3d_dot(edge2, q);
     if (t > EPSILON) {
         *dist = t;
         *out = vec3d_sum(r.orig, vec3d_scale(r.dir, t));
