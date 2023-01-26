@@ -1,16 +1,16 @@
 /* testing */
-#include "geom.h"
-#include "scene.h"
-#include "bitmap.h"
-#include "image.h"
-#include "camera.h"
-#include "png_save.h"
+#include "../geom.h"
+#include "../scene.h"
+#include "../bitmap.h"
+#include "../image.h"
+#include "../camera.h"
+#include "../png_save.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "debug.h"
+#include "../debug.h"
 
 uint8_t random_val()
 {
