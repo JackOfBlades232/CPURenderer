@@ -1,5 +1,6 @@
 /* CPURenderer/raytracer.c */
 #include "raytracer.h"
+#include "geom.h"
 #include "mathd.h"
 #include <math.h>
 #include <float.h>
@@ -63,8 +64,8 @@ static int light_is_seen(vec3d point, const light_src *l,
 
     lr.orig = point;
     lr.dir = vec3d_sub(l->pos, point);
-    dist_to_light = sqrt(vec3d_dot(lr.dir, lr.dir));
-    lr.dir = vec3d_normalized(lr.dir);
+    dist_to_light = vec3d_len(lr.dir);
+    vec3d_normalize(&lr.dir);
     
     for (objp = s->objects; objp - s->objects < s->objects_cnt; objp++) {
         if (objp == obj)
@@ -84,6 +85,8 @@ static vec3d diffuse_illum(const scene_obj *obj, const light_src *l,
     vec3d vl;
     double scal;
 
+    /* formula: kd * illum * max(0, cos(angle from vec_to_light to normal)) */
+
     vl = vec3d_normalized(vec3d_sub(l->pos, point));
     scal = max(0, vec3d_dot(vl, normal));
 
@@ -95,6 +98,9 @@ static vec3d specular_illum(const scene_obj *obj, const light_src *l,
 {
     vec3d vl, vr, ve;
     double scal;
+
+    /* formula: ks * illum * (max(0, cos(angle from reflected vec from light 
+     * to vector to viewer))) ^ ns */
 
     vl = vec3d_normalized(vec3d_sub(l->pos, point));
     vr = vec3d_reflect(vl, normal);
@@ -108,7 +114,7 @@ static vec3d specular_illum(const scene_obj *obj, const light_src *l,
             );
 }
 
-static vec3d vec3d_reflect_illum(const scene_obj *obj, const scene *s, 
+static vec3d reflect_illum(const scene_obj *obj, const scene *s, 
         vec3d point, vec3d normal, vec3d view_point, int cur_depth)
 {
     return vec3d_zero();
@@ -140,10 +146,12 @@ static vec3d shade(vec3d point, vec3d normal, vec3d view_point,
         }
     }
 
+    /* if not reached max recursion depth, collect illumination from refletion
+     * and refraction */
     if (cur_depth < max_depth) {
         color = vec3d_sum3(
             color,
-            vec3d_reflect_illum(obj, s, point, normal, view_point, cur_depth),
+            reflect_illum(obj, s, point, normal, view_point, cur_depth),
             refract_illum(obj, s, point, normal, view_point, cur_depth)
         );
     }
