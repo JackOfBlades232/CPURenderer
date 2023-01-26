@@ -3,15 +3,15 @@
 #include "geom.h"
 #include <math.h>
 
-camera create_camera(double pos_x, double pos_y, double pos_z, 
+camera camera_literal(double pos_x, double pos_y, double pos_z, 
         double dir_x, double dir_y, double dir_z,
         double up_x, double up_y, double up_z, 
         double fov, double foc_l)
 {
     camera c;
-    c.pos = create_vec(pos_x, pos_y, pos_z);
-    c.dir = create_vec(dir_x, dir_y, dir_z);
-    c.up = create_vec(up_x, up_y, up_z);
+    c.pos = vec3d_literal(pos_x, pos_y, pos_z);
+    c.dir = vec3d_literal(dir_x, dir_y, dir_z);
+    c.up = vec3d_literal(up_x, up_y, up_z);
     c.fov = fov;
     c.foc_l = foc_l;
     return c;
@@ -34,18 +34,18 @@ ray get_camera_ray(const camera *c, size_t x, size_t y, image *img)
                  (double)img->height;
 
     /* calculate right of the camera */
-    c_right = prod(c->dir, c->up);
+    c_right = vec3d_cross(c->dir, c->up);
     
     /* using camera right and up directions as a basis, and camera dir as 
      * offset direction, calcualate direction to the point */
     r.orig = c->pos;
-    r.dir = sum3(
-        mul(c_right, x_d * pixel_size),
-        mul(c->up, y_d * pixel_size),
-        mul(c->dir, c->foc_l)
+    r.dir = vec3d_sum3(
+        vec3d_scale(c_right, x_d * pixel_size),
+        vec3d_scale(c->up, y_d * pixel_size),
+        vec3d_scale(c->dir, c->foc_l)
     );
 
-    r.dir = normalized(r.dir); /* don't forget to normalize dir */
+    r.dir = vec3d_normalized(r.dir); /* don't forget to normalize dir */
     
     return r;
 }

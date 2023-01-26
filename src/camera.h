@@ -10,7 +10,7 @@ typedef struct tag_camera {
     double fov, foc_l;
 } camera;
 
-camera create_camera(double pos_x, double pos_y, double pos_z, 
+camera camera_literal(double pos_x, double pos_y, double pos_z, 
         double dir_x, double dir_y, double dir_z,
         double up_x, double up_y, double up_z, 
         double fov, double foc_l);

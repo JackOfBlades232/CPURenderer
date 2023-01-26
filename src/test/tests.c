@@ -52,7 +52,7 @@ void test_camera_tracing()
 
     img.width = 19;
     img.height = 11;
-    c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 
     for (i = 0; i < img.width; i++)
         for (j = 0; j < img.height; j++) {
@@ -77,10 +77,10 @@ int test_sphere()
     s.objects = malloc(sizeof(scene_obj));
     s.objects_cnt = 1;
     s.objects[0].type = sphere;
-    s.objects[0].data.s = create_sphere(1, 1, -2.5, 0.5);
-    s.objects[0].mat.ka = create_vec(0, 1, 1);
+    s.objects[0].data.s = sphere_literal(1, 1, -2.5, 0.5);
+    s.objects[0].mat.ka = vec3d_literal(0, 1, 1);
 
-    c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 
     status = render(&s, &c, &bm);
 
@@ -102,34 +102,34 @@ int test_3_spheres()
     s.objects_cnt = 3;
     
     s.objects[0].type = sphere;
-    s.objects[0].data.s = create_sphere(0, 0, -0.5, 0.15);
-    s.objects[0].mat.ka = create_vec(0, 0, 0);
-    s.objects[0].mat.ke = create_vec(0, 0, 0);
-    s.objects[0].mat.kd = create_vec(0.5, 0, 0);
-    s.objects[0].mat.ks = create_vec(0, 0, 0);
+    s.objects[0].data.s = sphere_literal(0, 0, -0.5, 0.15);
+    s.objects[0].mat.ka = vec3d_literal(0, 0, 0);
+    s.objects[0].mat.ke = vec3d_literal(0, 0, 0);
+    s.objects[0].mat.kd = vec3d_literal(0.5, 0, 0);
+    s.objects[0].mat.ks = vec3d_literal(0, 0, 0);
 
     s.objects[1].type = sphere;
-    s.objects[1].data.s = create_sphere(-0.35, 0, -0.5, 0.15);
-    s.objects[1].mat.ka = create_vec(0.5, 0, 0);
-    s.objects[1].mat.ke = create_vec(0, 0, 0);
-    s.objects[1].mat.kd = create_vec(0, 0, 0);
-    s.objects[1].mat.ks = create_vec(0, 0, 0);
+    s.objects[1].data.s = sphere_literal(-0.35, 0, -0.5, 0.15);
+    s.objects[1].mat.ka = vec3d_literal(0.5, 0, 0);
+    s.objects[1].mat.ke = vec3d_literal(0, 0, 0);
+    s.objects[1].mat.kd = vec3d_literal(0, 0, 0);
+    s.objects[1].mat.ks = vec3d_literal(0, 0, 0);
 
     s.objects[2].type = sphere;
-    s.objects[2].data.s = create_sphere(0.4, 0, -0.5, 0.15);
-    s.objects[2].mat.ka = create_vec(0.05, 0, 0);
-    s.objects[2].mat.ke = create_vec(0, 0, 0);
-    s.objects[2].mat.kd = create_vec(0, 0, 0);
-    s.objects[2].mat.ks = create_vec(0.5, 0, 0);
+    s.objects[2].data.s = sphere_literal(0.4, 0, -0.5, 0.15);
+    s.objects[2].mat.ka = vec3d_literal(0.05, 0, 0);
+    s.objects[2].mat.ke = vec3d_literal(0, 0, 0);
+    s.objects[2].mat.kd = vec3d_literal(0, 0, 0);
+    s.objects[2].mat.ks = vec3d_literal(0.5, 0, 0);
     s.objects[2].mat.ns = 500;
 
     s.lights_cnt = 1;
     s.lights = malloc(sizeof(light_src));
 
-    s.lights[0].pos = create_vec(-0.2, 0, 0.5);
-    s.lights[0].illum = create_vec(0.5, 0.5, 0.5);
+    s.lights[0].pos = vec3d_literal(-0.2, 0, 0.5);
+    s.lights[0].illum = vec3d_literal(0.5, 0.5, 0.5);
 
-    c = create_camera(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 
     status = render(&s, &c, &bm);
 
@@ -151,20 +151,20 @@ int test_triangle()
     s.objects_cnt = 1;
     
     s.objects[0].type = triangle;
-    s.objects[0].data.tr = create_triangle(-1, 0, 0, 0, -5, -5, 1, 0, 0);
-    s.objects[0].mat.ka = create_vec(0, 0, 0);
-    s.objects[0].mat.ke = create_vec(0, 0, 0);
-    s.objects[0].mat.kd = create_vec(0, 0, 1);
-    s.objects[0].mat.ks = create_vec(0, 1, 0);
+    s.objects[0].data.tr = trianlge_literal(-1, 0, 0, 0, -5, -5, 1, 0, 0);
+    s.objects[0].mat.ka = vec3d_literal(0, 0, 0);
+    s.objects[0].mat.ke = vec3d_literal(0, 0, 0);
+    s.objects[0].mat.kd = vec3d_literal(0, 0, 1);
+    s.objects[0].mat.ks = vec3d_literal(0, 1, 0);
     s.objects[0].mat.ns = 1000;
 
     s.lights_cnt = 1;
     s.lights = malloc(sizeof(light_src));
 
-    s.lights[0].pos = create_vec(0, 2, -0.5);
-    s.lights[0].illum = create_vec(1, 1, 1);
+    s.lights[0].pos = vec3d_literal(0, 2, -0.5);
+    s.lights[0].illum = vec3d_literal(1, 1, 1);
 
-    c = create_camera(0, 2, 0, 0, -1, 0, 0, 0, -1, 90, 1);
+    c = camera_literal(0, 2, 0, 0, -1, 0, 0, 0, -1, 90, 1);
 
     status = render(&s, &c, &bm);
 

@@ -30,12 +30,12 @@ void set_img_pixel(image *img, vec3d color, size_t x, size_t y)
 
 static vec3d tone_map(vec3d color)
 {
-    return divv(color, sum(color, create_vec(1, 1, 1)));
+    return vec3d_div(color, vec3d_sum(color, vec3d_literal(1, 1, 1)));
 }
 
 static vec3d gamma_correct(vec3d color)
 {
-    return powv(color, GAMMA_CORR_POW);
+    return vec3d_powv(color, GAMMA_CORR_POW);
 }
 
 static vec3d process_color(vec3d color)

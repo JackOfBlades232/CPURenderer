@@ -30,7 +30,7 @@ static vec3d get_normal(vec3d point, const scene_obj *obj, vec3d view_point)
             return get_triangle_normal(point, obj->data.tr, view_point);
     }
 
-    return create_vec(0, 0, 0);
+    return vec3d_literal(0, 0, 0);
 }
 
 static scene_obj *find_closest_object(ray r, const scene *s, vec3d *pos_out)
@@ -66,7 +66,7 @@ vec3d trace_ray(ray r, const scene *s, const camera *c, int cur_depth)
     hit_obj = find_closest_object(r, s, &hit_point);
 
     if (!hit_obj)
-        return zero_vec();
+        return vec3d_zero();
 
     hit_normal = get_normal(hit_point, hit_obj, c->pos);
     return shade(hit_point, hit_normal, c->pos, hit_obj, s, cur_depth);

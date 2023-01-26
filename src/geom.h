@@ -24,29 +24,29 @@ typedef struct tag_triangle_obj {
 
 double deg2rad(double deg);
 
-vec3d create_vec(double x, double y, double z);
-vec3d zero_vec();
-vec3d neg(vec3d v);
-vec3d sum(vec3d v1, vec3d v2);
-vec3d sum3(vec3d v1, vec3d v2, vec3d v3);
-vec3d subtr(vec3d v1, vec3d v2);
-vec3d mul(vec3d v, double coeff);
-vec3d powv(vec3d v, double p);
-vec3d normalized(vec3d v);
-vec3d prod(vec3d v1, vec3d v2);
-double dot(vec3d v1, vec3d v2);
-double sq_len(vec3d v);
-double len(vec3d v);
-vec3d mulv(vec3d v1, vec3d v2);
-vec3d divv(vec3d v1, vec3d v2);
+vec3d vec3d_literal(double x, double y, double z);
+vec3d vec3d_zero();
+vec3d vec3d_neg(vec3d v);
+vec3d vec3d_sum(vec3d v1, vec3d v2);
+vec3d vec3d_sum3(vec3d v1, vec3d v2, vec3d v3);
+vec3d vec3d_sub(vec3d v1, vec3d v2);
+vec3d vec3d_scale(vec3d v, double coeff);
+vec3d vec3d_powv(vec3d v, double p);
+vec3d vec3d_normalized(vec3d v);
+vec3d vec3d_cross(vec3d v1, vec3d v2);
+double vec3d_dot(vec3d v1, vec3d v2);
+double vec3d_sq_vec3d_len(vec3d v);
+double vec3d_len(vec3d v);
+vec3d vec3d_mul(vec3d v1, vec3d v2);
+vec3d vec3d_div(vec3d v1, vec3d v2);
 
-vec3d reflect(vec3d v, vec3d normal);
+vec3d vec3d_reflect(vec3d v, vec3d normal);
 
-sphere_obj create_sphere(double cx, double cy, double cz, double r);
+sphere_obj sphere_literal(double cx, double cy, double cz, double r);
 vec3d get_sphere_normal(vec3d point, sphere_obj s);
 int intersect_with_sphere(ray r, sphere_obj s, vec3d *out, double *dist);
             
-triangle_obj create_triangle(double x1, double y1, double z1,
+triangle_obj trianlge_literal(double x1, double y1, double z1,
                              double x2, double y2, double z2,
                              double x3, double y3, double z3);
 vec3d get_triangle_normal(vec3d point, triangle_obj tr, vec3d view_point);
