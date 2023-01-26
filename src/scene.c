@@ -1,7 +1,5 @@
 /* CPURenderer/scene.c */
 #include "scene.h"
-#include "bitmap.h"
-#include "image.h"
 #include "geom.h"
 #include "camera.h"
 #include "lighting.h"
@@ -72,27 +70,22 @@ vec3d trace_ray(ray r, const scene *s, const camera *c, int cur_depth)
     return shade(hit_point, hit_normal, c->pos, hit_obj, s, cur_depth);
 }
 
-int render(const scene *s, const camera *c, bitmap_t *bm)
+int render(const scene *s, const camera *c, image *img)
 {
-    image *imgp;
     size_t x, y;
     ray r;
     vec3d color;
 
-    imgp = create_image(bm->width, bm->height);
-
-    for (x = 0; x < imgp->width; x++)
-        for (y = 0; y < imgp->height; y++) {
-            r = get_camera_ray(c, x, y, imgp);
+    for (x = 0; x < img->width; x++)
+        for (y = 0; y < img->height; y++) {
+            r = get_camera_ray(c, x, y, img);
             color = trace_ray(r, s, c, 0);
 
-            set_img_pixel(imgp, color, x, y);
+            /* Need to negate image inversion */
+            set_img_pixel(img, color, x, img->height-y-1);
         }
 
-    post_process(imgp);
-    copy_image_to_bitmap(imgp, bm);
-
-    destroy_image(imgp);
+    post_process(img);
 
     return 1;
 }

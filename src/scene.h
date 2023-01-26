@@ -4,7 +4,7 @@
 
 #include "geom.h"
 #include "camera.h"
-#include "bitmap.h"
+#include "image.h"
 #include <stddef.h>
 
 enum { max_depth = 2 };
@@ -37,6 +37,6 @@ typedef struct tag_scene {
 
 int intersect_ray(ray r, const scene_obj *obj, vec3d *out, double *dist);
 vec3d trace_ray(ray r, const scene *s, const camera *c, int cur_depth);
-int render(const scene *s, const camera *c, bitmap_t *bm);
+int render(const scene *s, const camera *c, image *img);
 
 #endif 

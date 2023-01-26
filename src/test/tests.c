@@ -1,10 +1,10 @@
 /* testing */
 #include "../geom.h"
 #include "../scene.h"
-#include "../bitmap.h"
 #include "../image.h"
 #include "../camera.h"
 #include "../png_save.h"
+#include <pngconf.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -12,36 +12,30 @@
 
 #include "../debug.h"
 
-uint8_t random_val()
+double random_val()
 {
-    return (uint8_t)(256.0*rand()/(RAND_MAX+1.0));
+    return rand()/(RAND_MAX+1.0);
 }
 
-pixel_t random_pixel()
+vec3d random_vec()
 {
-    pixel_t pixel;
-
-    pixel.r = random_val();
-    pixel.g = random_val();
-    pixel.b = random_val();
-
-    return pixel;
+    return vec3d_literal(random_val(), random_val(), random_val());
 }
 
 int create_noise_img()
 {
-    bitmap_t bm;
-    int i, j;
+    image img;
+    size_t i, j;
 
-    bm.width = 640;
-    bm.height = 480;
-    bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
+    alloc_image(&img, 640, 480);
 
-    for (i = 0; i < bm.height; i++)
-        for (j = 0; j < bm.width; j++)
-            *pixel_at(&bm, j, i) = random_pixel();
+    for (i = 0; i < img.height; i++)
+        for (j = 0; j < img.width; j++)
+            set_img_pixel(&img, random_vec(), j, i);
   
-    return save_bitmap_to_png(&bm, "./test_noise.png");
+    save_img_to_png(&img, "./test_noise.png");
+    free_image(&img);
+    return 0;
 }
 
 void test_camera_tracing()
@@ -57,22 +51,20 @@ void test_camera_tracing()
     for (i = 0; i < img.width; i++)
         for (j = 0; j < img.height; j++) {
             ray r = get_camera_ray(&c, i, j, &img);
-            printf("(%ld, %ld): ro (%lf, %lf, %lf), rd (%lf, %lf, %lf)\n",
-                    i, j, r.orig.x, r.orig.y, r.orig.z, 
-                    r.dir.x, r.dir.y, r.dir.z); 
+            if (i < 0)
+                printf("(%ld, %ld): ro (%lf, %lf, %lf), rd (%lf, %lf, %lf)\n",
+                        i, j, r.orig.x, r.orig.y, r.orig.z, 
+                        r.dir.x, r.dir.y, r.dir.z);
         }
 }
 
 int test_sphere()
 {
-    int status = 0;
-    bitmap_t bm;
+    image img;
     scene s;
     camera c;
 
-    bm.width = 640;
-    bm.height = 480;
-    bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
+    alloc_image(&img, 640, 480);
 
     s.objects = malloc(sizeof(scene_obj));
     s.objects_cnt = 1;
@@ -82,21 +74,21 @@ int test_sphere()
 
     c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 
-    status = render(&s, &c, &bm);
+    render(&s, &c, &img);
 
-    return status ? save_bitmap_to_png(&bm, "./test_sphere.png") : 10;
+    save_img_to_png(&img, "./test_sphere.png");
+    free(s.objects);
+    free_image(&img);
+    return 0;
 }
 
 int test_3_spheres()
 {
-    int status = 0;
-    bitmap_t bm;
+    image img;
     scene s;
     camera c;
 
-    bm.width = 640;
-    bm.height = 480;
-    bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
+    alloc_image(&img, 640, 480);
 
     s.objects = malloc(3 * sizeof(scene_obj));
     s.objects_cnt = 3;
@@ -131,21 +123,21 @@ int test_3_spheres()
 
     c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
 
-    status = render(&s, &c, &bm);
+    render(&s, &c, &img);
 
-    return status ? save_bitmap_to_png(&bm, "./test_3_spheres.png") : 10;
+    save_img_to_png(&img, "./test_3_spheres.png");
+    free(s.objects);
+    free_image(&img);
+    return 0;
 }
 
 int test_triangle()
 {
-    int status = 0;
-    bitmap_t bm;
+    image img;
     scene s;
     camera c;
 
-    bm.width = 640;
-    bm.height = 480;
-    bm.pixels = calloc(bm.width * bm.height, sizeof(pixel_t));
+    alloc_image(&img, 640, 480);
 
     s.objects = malloc(sizeof(scene_obj));
     s.objects_cnt = 1;
@@ -166,13 +158,19 @@ int test_triangle()
 
     c = camera_literal(0, 2, 0, 0, -1, 0, 0, 0, -1, 90, 1);
 
-    status = render(&s, &c, &bm);
+    render(&s, &c, &img);
 
-    return status ? save_bitmap_to_png(&bm, "./test_triangle.png") : 10;
+    save_img_to_png(&img, "./test_triangle.png");
+    free(s.objects);
+    free_image(&img);
+    return 0;
 }
 
 int main()
 {
+    create_noise_img();
+    test_camera_tracing();
+    test_sphere();
     test_3_spheres();
     test_triangle();
     return 0;

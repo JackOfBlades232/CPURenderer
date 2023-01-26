@@ -2,8 +2,8 @@
 #ifndef PNG_SAVE_SENTRY
 #define PNG_SAVE_SENTRY
 
-#include "bitmap.h"
+#include "image.h"
 
-int save_bitmap_to_png(bitmap_t *bitmap, const char *path);
+int save_img_to_png(image *img, const char *path);
 
 #endif

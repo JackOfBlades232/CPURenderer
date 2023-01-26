@@ -6,8 +6,10 @@
 #include "image.h"
 
 typedef struct tag_camera {
-    vec3d pos, dir, up;
-    double fov, foc_l;
+    vec3d pos;
+    vec3d dir, up, right;
+    vec3d foc_v;
+    double fov_h;
 } camera;
 
 camera camera_literal(double pos_x, double pos_y, double pos_z, 

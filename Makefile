@@ -1,4 +1,4 @@
-SRCMODULES = src/bitmap.c src/camera.c src/debug.c src/geom.c src/image.c \
+SRCMODULES = src/camera.c src/debug.c src/geom.c src/image.c \
 			 src/lighting.c src/mathd.c src/png_save.c src/scene.c
 OBJMODULES = $(SRCMODULES:.c=.o)
 CC = gcc

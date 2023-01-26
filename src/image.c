@@ -1,6 +1,5 @@
 /* CPURenderer/image.c */
 #include "image.h"
-#include "bitmap.h"
 #include "geom.h"
 #include <stddef.h>
 #include <stdlib.h>
@@ -8,17 +7,15 @@
 
 #define GAMMA_CORR_POW 1.0/2.2
 
-image *create_image(size_t width, size_t height)
+int alloc_image(image *img, size_t width, size_t height)
 {
-    image *img;
-    img = malloc(sizeof(image));
     img->width = width;
     img->height = height;
     img->content = malloc(width * height * sizeof(vec3d));
-    return img;
+    return img->content != NULL;
 }
 
-static vec3d *img_pixel_at(image *img, size_t x, size_t y)
+vec3d *img_pixel_at(image *img, size_t x, size_t y)
 {
     return img->content + y*img->width + x;
 }
@@ -54,32 +51,7 @@ void post_process(image *img)
         }
 }
 
-int copy_image_to_bitmap(image *src_img, bitmap_t *dest_bm)
-{
-    size_t x, y;
-
-    if (src_img->width != dest_bm->width || src_img->height != dest_bm->height)
-        return 0;
-
-    for (x = 0; x < src_img->width; x++)
-        for (y = 0; y < src_img->height; y++) {
-            vec3d *colorp;
-            pixel_t pix;
-
-            colorp = img_pixel_at(src_img, x, y);
-            pix = create_pixel(
-                (uint8_t)(colorp->x * 255.0),
-                (uint8_t)(colorp->y * 255.0),
-                (uint8_t)(colorp->z * 255.0)
-            );
-            set_pixel(dest_bm, x, dest_bm->height - y - 1, pix);
-        }
-
-    return 1;
-}
-
-void destroy_image(image *img)
+void free_image(image *img)
 {
     free(img->content);
-    free(img);
 }

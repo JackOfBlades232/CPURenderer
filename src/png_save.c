@@ -1,7 +1,6 @@
 /* CPURenderer/png_save.h */
-/* TODO : write comments */
 #include "png_save.h"
-#include "bitmap.h"
+#include "image.h"
 #include <setjmp.h>
 #include <stdint.h>
 #include <stdio.h>
@@ -11,34 +10,34 @@
 
 enum { bit_depth = 8 };
 
-static void set_row_data(bitmap_t *bitmap, png_structp png_ptr,
+static void set_row_data(image *img, png_structp png_ptr,
         png_bytep *row_data_p, png_bytepp *row_pointers_p)
 {
     int i;
 
     *row_data_p = png_malloc(png_ptr, 
-        3 * bitmap->width * bitmap->height * sizeof(png_byte));
-    *row_pointers_p = png_malloc(png_ptr, bitmap->height * sizeof(png_bytep));
+        3 * img->width * img->height * sizeof(png_byte));
+    *row_pointers_p = png_malloc(png_ptr, img->height * sizeof(png_bytep));
 
-    for (i = 0; i < bitmap->height; i++) {
+    for (i = 0; i < img->height; i++) {
         int base, j;
 
-        base = 3 * i * bitmap->width;
+        base = 3 * i * img->width;
         (*row_pointers_p)[i] = (*row_data_p) + base;
 
-        for (j = 0; j < bitmap->width; j++) {
-            pixel_t *bm_pixel;
+        for (j = 0; j < img->width; j++) {
+            vec3d *img_pixel;
 
-            bm_pixel = pixel_at(bitmap, j, i);
+            img_pixel = img_pixel_at(img, j, i);
 
-            (*row_data_p)[base + 3 * j] = bm_pixel->r;
-            (*row_data_p)[base + 3 * j + 1] = bm_pixel->g;
-            (*row_data_p)[base + 3 * j + 2] = bm_pixel->b;
+            (*row_data_p)[base + 3 * j] = (png_byte)(255.0*img_pixel->x);
+            (*row_data_p)[base + 3 * j + 1] = (png_byte)(255.0*img_pixel->y);
+            (*row_data_p)[base + 3 * j + 2] = (png_byte)(255.0*img_pixel->z);
         }
     }
 }
 
-int save_bitmap_to_png(bitmap_t *bitmap, const char *path)
+int save_img_to_png(image *img, const char *path)
 {
     FILE *fp;
     png_structp png_ptr;
@@ -76,8 +75,8 @@ int save_bitmap_to_png(bitmap_t *bitmap, const char *path)
     png_set_IHDR(
         png_ptr,
         info_ptr,
-        bitmap->width,
-        bitmap->height,
+        img->width,
+        img->height,
         bit_depth,
         PNG_COLOR_TYPE_RGB,
         PNG_INTERLACE_NONE,
@@ -87,7 +86,7 @@ int save_bitmap_to_png(bitmap_t *bitmap, const char *path)
 
     png_write_info(png_ptr, info_ptr);
 
-    set_row_data(bitmap, png_ptr, &row_data, &row_pointers);
+    set_row_data(img, png_ptr, &row_data, &row_pointers);
 
     png_set_rows(png_ptr, info_ptr, row_pointers);
     png_write_png(png_ptr, info_ptr, PNG_TRANSFORM_IDENTITY, NULL);
