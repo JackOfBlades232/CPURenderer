@@ -1,4 +1,4 @@
-/* CPURenderer/mathd.c */
+/* CPURenderer/src/mathd.c */
 #include "mathd.h"
 #include <math.h>
 

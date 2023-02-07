@@ -1,4 +1,4 @@
-/* CPURenderer/debug.h */
+/* CPURenderer/src/debug.h */
 #ifndef DEBUG_SENTRY
 #define DEBUG_SENTRY
 

@@ -1,4 +1,4 @@
-/* CPURenderer/raytracer.h */
+/* CPURenderer/src/raytracer.h */
 #ifndef RAYTRACER_SENTRY
 #define RAYTRACER_SENTRY
 

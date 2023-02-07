@@ -1,4 +1,4 @@
-/* CPURenderer/image.h */
+/* CPURenderer/src/image.h */
 #ifndef IMAGE_SENTRY
 #define IMAGE_SENTRY
 

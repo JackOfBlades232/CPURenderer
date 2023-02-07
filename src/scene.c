@@ -1,8 +1,9 @@
-/* CPURenderer/scene.c */
+/* CPURenderer/src/scene.c */
 #include "scene.h"
 #include "geom.h"
 #include "camera.h"
 #include "raytracer.h"
+#include <stdlib.h>
 
 #include "debug.h"
 
@@ -22,6 +23,18 @@ material material_literal(double ka_x, double ka_y, double ka_z,
     m.ni = ni;
     m.al = vec3d_literal(al_x, al_y, al_z);
     return m;
+}
+
+scene *create_scene()
+{
+    return malloc(sizeof(scene));
+}
+
+void destroy_scene(scene *s)
+{
+    free(s->objects);
+    free(s->lights);
+    free(s);
 }
 
 int render(const scene *s, const camera *c, image *img)

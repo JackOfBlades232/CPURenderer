@@ -1,4 +1,4 @@
-/* CPURenderer/debug.h */
+/* CPURenderer/src/debug.h */
 #include "debug.h"
 
 #include <stdio.h>

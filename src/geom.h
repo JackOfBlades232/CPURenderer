@@ -1,4 +1,4 @@
-/* CPURenderer/geom.h */
+/* CPURenderer/src/geom.h */
 #ifndef GEOM_SENTRY
 #define GEOM_SENTRY
 

@@ -1,4 +1,4 @@
-/* testing */
+/* CPURenderer/src/test/tests.c */
 #include "../geom.h"
 #include "../scene.h"
 #include "../image.h"

@@ -1,4 +1,4 @@
-/* CPURenderer/mathd.h */
+/* CPURenderer/src/mathd.h */
 #ifndef MATHD_SENTRY
 #define MATHD_SENTRY
 

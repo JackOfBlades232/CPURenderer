@@ -1,4 +1,4 @@
-/* CPURenderer/camera.h */
+/* CPURenderer/src/camera.h */
 #ifndef CAMERA_SENTRY
 #define CAMERA_SENTRY
 

@@ -1,4 +1,4 @@
-/* CPURenderer/camera.c */
+/* CPURenderer/src/camera.c */
 #include "camera.h"
 #include "geom.h"
 #include <math.h>

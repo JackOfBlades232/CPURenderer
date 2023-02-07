@@ -1,4 +1,4 @@
-/* CPURenderer/image.c */
+/* CPURenderer/src/image.c */
 #include "image.h"
 #include "geom.h"
 #include <stddef.h>

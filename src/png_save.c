@@ -1,4 +1,4 @@
-/* CPURenderer/png_save.h */
+/* CPURenderer/src/png_save.h */
 #include "png_save.h"
 #include "image.h"
 #include <setjmp.h>

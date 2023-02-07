@@ -1,4 +1,4 @@
-/* CPURenderer/raytracer.c */
+/* CPURenderer/src/raytracer.c */
 #include "raytracer.h"
 #include "geom.h"
 #include "mathd.h"

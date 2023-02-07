@@ -1,4 +1,4 @@
-/* CPURenderer/geom.c */
+/* CPURenderer/src/geom.c */
 #include "mathd.h"
 #include "geom.h"
 #include <math.h>

@@ -1,4 +1,4 @@
-/* CPURenderer/scene.h */
+/* CPURenderer/src/scene.h */
 #ifndef SCENE_SENTRY
 #define SCENE_SENTRY
 
@@ -41,6 +41,9 @@ material material_literal(double ka_x, double ka_y, double ka_z,
                           double ks_x, double ks_y, double ks_z,
                           double ns, double ni,
                           double al_x, double al_y, double al_z);
+
+scene *create_scene();
+void destroy_scene(scene *s);
 
 int render(const scene *s, const camera *c, image *img);
 
