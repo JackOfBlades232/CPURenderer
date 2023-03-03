@@ -13,6 +13,8 @@ enum {
     base_obj_bufsize = 16,
     base_light_bufsize = 8,
 
+    base_v_bufsize = 32,
+
     bufsize_mod = 2
 };
 
@@ -71,12 +73,41 @@ static void free_read_result(file_read_result *res)
     free(res);
 }
 
+static void init_read_state(file_read_state *state)
+{
+    state->vert_cap = state->v_norm_cap = state->v_texc_cap = base_v_bufsize;
+    state->vert_cnt = state->v_norm_cnt = state->v_texc_cnt = 0;
+    state->vertices = malloc(sizeof(vec3d) * state->vert_cap);
+    state->v_normals = malloc(sizeof(vec3d) * state->v_norm_cap);
+    state->v_texcoords = malloc(sizeof(vec3d) * state->v_texc_cap);
+
+    state->cur_mat = NULL;
+    state->material_mapping = 
+        malloc(sizeof(material_name_pair) * base_mtl_bufsize);
+}
+
+static void deinit_read_state(file_read_state *state)
+{
+    free(state->vertices);
+    free(state->v_normals);
+    free(state->v_texcoords);
+    free(state->material_mapping);
+}
+
+static void *resize_buf_if_necessary(void *buf, int *cap,
+        int len, int elem_size)  
+{
+    if (len >= *cap) {
+        *cap *= bufsize_mod;
+        return realloc(buf, (*cap) * elem_size);
+    } else
+        return buf;
+}
+
 static void add_object(file_read_result *res, scene_obj obj)
 {
-    if (res->obj_cnt >= res->obj_cap) {
-        res->obj_cap *= bufsize_mod;
-        res->obj_buf = realloc(res->obj_buf, sizeof(scene_obj)*res->obj_cap);
-    }
+    res->obj_buf = resize_buf_if_necessary(res->obj_buf, 
+            &res->obj_cap, res->obj_cnt, sizeof(scene_obj));
 
     res->obj_buf[res->obj_cnt] = obj;
     res->obj_cnt++;
@@ -84,16 +115,77 @@ static void add_object(file_read_result *res, scene_obj obj)
 
 static void add_light(file_read_result *res, light_src light)
 {
-    if (res->light_cnt >= res->light_cap) {
-        res->light_cap *= bufsize_mod;
-        res->light_buf = realloc(
-                res->light_buf, 
-                sizeof(light_src)*res->light_cap
-                );
-    }
+    res->light_buf = resize_buf_if_necessary(res->light_buf, 
+            &res->light_cap, res->light_cnt, sizeof(light_src));
 
     res->light_buf[res->light_cnt] = light;
     res->light_cnt++;
+}
+
+static vec3d *add_vec_item(vec3d *buf, int *cap, int *len, vec3d item)
+{
+    buf = resize_buf_if_necessary(buf, cap, *len, sizeof(vec3d));
+    buf[*len] = item;
+    (*len)++;
+
+    return buf;
+}
+
+static void add_vertex(file_read_state *state, vec3d v)
+{
+    state->vertices = add_vec_item(state->vertices,
+            &state->vert_cap, &state->vert_cnt, v);
+}
+
+static void add_v_normal(file_read_state *state, vec3d vn)
+{
+    state->v_normals = add_vec_item(state->v_normals,
+            &state->v_norm_cap, &state->v_norm_cnt, vn);
+}
+
+static void add_v_texcoord(file_read_state *state, vec3d vt)
+{
+    state->v_texcoords = add_vec_item(state->v_texcoords,
+            &state->v_texc_cap, &state->v_texc_cnt, vt);
+}
+
+static void add_material(file_read_state *state, file_read_result *res,
+        material mat, const char *mat_name)
+{
+    int old_cap = res->mat_cap;
+    material_name_pair *pairp;
+
+    res->mat_buf = resize_buf_if_necessary(res->mat_buf,
+            &res->mat_cap, res->mat_cnt, sizeof(material));
+    if (res->mat_cap != old_cap) {
+        state->material_mapping = realloc(state->material_mapping,
+                sizeof(material_name_pair) * res->mat_cap);
+    }
+
+    res->mat_buf[res->mat_cnt] = mat;
+
+    pairp = state->material_mapping + res->mat_cnt;
+    pairp->mat = res->mat_buf + res->mat_cnt;
+    pairp->name = malloc(sizeof(char) * strlen(mat_name));
+    strcpy(pairp->name, mat_name);
+
+    res->mat_cnt++;
+}
+
+static int set_current_material(file_read_state *state, file_read_result *res,
+        const char *mat_name)
+{
+    material_name_pair *pairp;
+    for (pairp = state->material_mapping; 
+            pairp - state->material_mapping < res->mat_cnt;
+            pairp++) {
+        if (strcmp(pairp->name, mat_name) == 0) {
+            state->cur_mat = pairp->mat;
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 static int try_read_double(word_listp w_list, double *out)
@@ -220,12 +312,14 @@ file_read_result *read_scene_from_files(const char *path)
     int eol_char = '\n';
 
     file_read_result *res;
+    file_read_state state;
 
     obj_f = fopen(path, "r");
     if (!obj_f)
         return NULL;
 
     res = create_read_result();
+    init_read_state(&state);
 
     while (tokenize_input_line_to_word_list(obj_f, &w_list, &eol_char) == 0) {
         int success = parse_obj_line(w_list, res, dirpath);
@@ -238,10 +332,12 @@ file_read_result *read_scene_from_files(const char *path)
             break;
     }
 
+    deinit_read_state(&state);
     fclose(obj_f);
     return res;
 
 read_error:
+    deinit_read_state(&state);
     free_read_result(res);
     fclose(obj_f);
     return NULL;

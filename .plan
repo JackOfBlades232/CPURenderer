@@ -1,5 +1,5 @@
 Obj reader (not from beginning):
-- Impl file read state (for storing vertices, materials, etc.)
+* Impl file read state (for storing vertices, materials, etc.)
 - Impl mtl file parsing with mat_buf and mapping fill
 - Impl usemtl (setting cur mat) and applying to objects
 - Impl v/vt/vn parsing with storing in buf
