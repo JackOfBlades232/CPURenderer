@@ -1,5 +1,6 @@
 camera.o: src/camera.c src/camera.h src/geom.h src/image.h
-debug.o: src/debug.c src/debug.h src/geom.h
+debug.o: src/debug.c src/debug.h src/geom.h src/scene.h src/camera.h \
+ src/image.h
 geom.o: src/geom.c src/mathd.h src/geom.h
 image.o: src/image.c src/image.h src/geom.h
 raytracer.o: src/raytracer.c src/raytracer.h src/geom.h src/scene.h \

@@ -170,6 +170,7 @@ static void add_material(file_read_state *state, file_read_result *res,
     strcpy(pairp->name, mat_name);
 
     res->mat_cnt++;
+    state->cur_mat = pairp->mat;
 }
 
 static int set_current_material(file_read_state *state, file_read_result *res,
@@ -202,49 +203,191 @@ static int try_read_double(word_listp w_list, double *out)
     return result == 1;
 }
 
-static int parse_mtllib(word_listp w_list, file_read_result *res,
-        const char *dirpath)
+static int try_read_vec3d(word_listp w_list, vec3d *out)
+{
+    if (!try_read_double(w_list, &out->x) ||
+            !try_read_double(w_list, &out->y) ||
+            !try_read_double(w_list, &out->z)) {
+        return 0;
+    }
+
+    return 1;
+}
+
+static int parse_newmtl(word_listp w_list, file_read_result *res,
+        file_read_state *state)
+{
+    struct word *w;
+
+    w = word_list_pop_first(w_list);
+    if (!w)
+        return 0;
+
+    add_material(
+        state, res,
+        material_literal(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 
+        word_content(w)
+    );
+    word_free(w);
+
+    return 1;
+}
+
+static int parse_mtl_line(word_listp w_list, file_read_result *res,
+        file_read_state *state)
+{
+    int status = 0;
+    struct word *w;
+    const char *tok;
+
+    w = word_list_pop_first(w_list);
+    if (!w) /* empty line */
+        return 1;
+    tok = word_content(w);
+
+    if (*tok == '#') /* comment */
+        status = 1;
+    else if (strcmp(tok, "newmtl") == 0)
+        status = parse_newmtl(w_list, res, state);
+    else if (strcmp(tok, "Ka") == 0)
+        status = try_read_vec3d(w_list, &state->cur_mat->ka);
+    else if (strcmp(tok, "Ke") == 0)
+        status = try_read_vec3d(w_list, &state->cur_mat->ke);
+    else if (strcmp(tok, "Kd") == 0)
+        status = try_read_vec3d(w_list, &state->cur_mat->kd);
+    else if (strcmp(tok, "Ks") == 0)
+        status = try_read_vec3d(w_list, &state->cur_mat->ks);
+    else if (strcmp(tok, "Ns") == 0)
+        status = try_read_double(w_list, &state->cur_mat->ns);
+    else if (strcmp(tok, "Ni") == 0)
+        status = try_read_double(w_list, &state->cur_mat->ni);
+    else if (strcmp(tok, "al") == 0)
+        status = try_read_vec3d(w_list, &state->cur_mat->al);
+
+    word_free(w);
+
+    return status;
+}
+
+static int read_mtl_file(const char *path, file_read_result *res, 
+        file_read_state *state)
+{
+    int success = 1;
+    FILE *mtl_f;
+    word_listp w_list;
+    int eol_char = '\n';
+
+    mtl_f = fopen(path, "r");
+    if (!mtl_f)
+        return 0;
+
+    while (tokenize_input_line_to_word_list(mtl_f, &w_list, &eol_char) == 0) {
+        success = parse_mtl_line(w_list, res, state);
+        word_list_free(w_list);
+
+        if (!success || eol_char == EOF)
+            break;
+    }
+
+    state->cur_mat = NULL;
+    fclose(mtl_f);
+    return success;
+}
+
+static char *concat_strings(const char *s1, const char *s2)
+{
+    int len1 = strlen(s1);
+    int len2 = strlen(s2);
+    char *s = malloc(sizeof(char) * (len1+len2+1));
+    strncpy(s, s1, len1);
+    strncpy(s+len1, s2, len2);
+    s[len1+len2] = '\0';
+    return s;
+}
+
+static int parse_mtllib(word_listp w_list, file_read_result *res, 
+        file_read_state *state, const char *dirpath)
+{
+    struct word *w;
+    char *full_mtl_path;
+
+    w = word_list_pop_first(w_list);
+    if (!w)
+        return 0;
+
+    full_mtl_path = concat_strings(dirpath, word_content(w));
+    return read_mtl_file(full_mtl_path, res, state);
+}
+
+static int parse_usemtl(word_listp w_list, file_read_result *res, 
+        file_read_state *state)
+{
+    int result;
+    struct word *w;
+
+    w = word_list_pop_first(w_list);
+    if (!w)
+        return 0;
+
+    result = set_current_material(state, res, word_content(w));
+
+    word_free(w);
+    return result;
+}
+
+static int parse_v(word_listp w_list, file_read_result *res, 
+        file_read_state *state)
+{
+    vec3d v;
+
+    if (!try_read_vec3d(w_list, &v))
+        return 0;
+
+    add_vertex(state, v);
+    return 1;
+}
+
+static int parse_vn(word_listp w_list, file_read_result *res, 
+        file_read_state *state)
+{
+    vec3d vn;
+
+    if (!try_read_vec3d(w_list, &vn))
+        return 0;
+
+    add_v_normal(state, vn);
+    return 1;
+}
+
+static int parse_vt(word_listp w_list, file_read_result *res, 
+        file_read_state *state)
+{
+    vec3d vt;
+
+    if (!try_read_vec3d(w_list, &vt))
+        return 0;
+
+    add_v_texcoord(state, vt);
+    return 1;
+}
+
+static int parse_f(word_listp w_list, file_read_result *res, 
+        file_read_state *state)
 {
     return 0;
 }
 
-static int parse_usemtl(word_listp w_list, file_read_result *res)
-{
-    return 0;
-}
-
-static int parse_v(word_listp w_list, file_read_result *res)
-{
-    return 0;
-}
-
-static int parse_vt(word_listp w_list, file_read_result *res)
-{
-    return 0;
-}
-
-static int parse_vn(word_listp w_list, file_read_result *res)
-{
-    return 0;
-}
-
-static int parse_f(word_listp w_list, file_read_result *res)
-{
-    return 0;
-}
-
-static int parse_S(word_listp w_list, file_read_result *res)
+static int parse_S(word_listp w_list, file_read_result *res,
+        file_read_state *state)
 {
     scene_obj obj;
 
     obj.type = sphere;
-    if (!try_read_double(w_list, &obj.data.s.center.x) ||
-            !try_read_double(w_list, &obj.data.s.center.y) ||
-            !try_read_double(w_list, &obj.data.s.center.z) ||
+    if (!try_read_vec3d(w_list, &obj.data.s.center) ||
             !try_read_double(w_list, &obj.data.s.rad)) {
         return 0;
     }
-    /* set material */
+    obj.mat = state->cur_mat;
 
     add_object(res, obj);
     return 1;
@@ -254,12 +397,8 @@ static int parse_P(word_listp w_list, file_read_result *res)
 {
     light_src light;
 
-    if (!try_read_double(w_list, &light.pos.x) ||
-            !try_read_double(w_list, &light.pos.y) ||
-            !try_read_double(w_list, &light.pos.z) ||
-            !try_read_double(w_list, &light.illum.x) ||
-            !try_read_double(w_list, &light.illum.y) ||
-            !try_read_double(w_list, &light.illum.z)) {
+    if (!try_read_vec3d(w_list, &light.pos) || 
+            !try_read_vec3d(w_list, &light.illum)) {
         return 0;
     }
 
@@ -268,7 +407,7 @@ static int parse_P(word_listp w_list, file_read_result *res)
 }
 
 static int parse_obj_line(word_listp w_list, file_read_result *res,
-        const char *dirpath)
+        file_read_state *state, const char *dirpath)
 {
     int status = 0;
     struct word *w;
@@ -282,19 +421,19 @@ static int parse_obj_line(word_listp w_list, file_read_result *res,
     if (*tok == '#') /* comment */
         status = 1;
     else if (strcmp(tok, "mtllib") == 0)
-        status = parse_mtllib(w_list, res, dirpath);
+        status = parse_mtllib(w_list, res, state, dirpath);
     else if (strcmp(tok, "usemtl") == 0)
-        status = parse_usemtl(w_list, res);
+        status = parse_usemtl(w_list, res, state);
     else if (strcmp(tok, "v") == 0)
-        status = parse_v(w_list, res);
-    else if (strcmp(tok, "vt") == 0)
-        status = parse_vt(w_list, res);
+        status = parse_v(w_list, res, state);
     else if (strcmp(tok, "vn") == 0)
-        status = parse_vn(w_list, res);
+        status = parse_vn(w_list, res, state);
+    else if (strcmp(tok, "vt") == 0)
+        status = parse_vt(w_list, res, state);
     else if (strcmp(tok, "f") == 0)
-        status = parse_f(w_list, res);
+        status = parse_f(w_list, res, state);
     else if (strcmp(tok, "S") == 0)
-        status = parse_S(w_list, res);
+        status = parse_S(w_list, res, state);
     else if (strcmp(tok, "P") == 0)
         status = parse_P(w_list, res);
 
@@ -322,7 +461,7 @@ file_read_result *read_scene_from_files(const char *path)
     init_read_state(&state);
 
     while (tokenize_input_line_to_word_list(obj_f, &w_list, &eol_char) == 0) {
-        int success = parse_obj_line(w_list, res, dirpath);
+        int success = parse_obj_line(w_list, res, &state, dirpath);
         word_list_free(w_list);
 
         if (!success)

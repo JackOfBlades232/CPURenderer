@@ -171,18 +171,12 @@ int test_obj_read()
     file_read_result *fres;
     scene *s;
     camera c;
-    material m;
-    int i;
 
     fres = read_scene_from_files("./ftest.obj");
     if (fres == NULL)
         return 1;
 
     s = create_scene_for_read_res(fres);
-    m = material_literal(0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
-
-    for (i = 0; i < s->objects_cnt; i++)
-        s->objects[i].mat = &m;
 
     alloc_image(&img, 640, 480);
 

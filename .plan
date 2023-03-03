@@ -1,11 +1,13 @@
 Obj reader (not from beginning):
 * Impl file read state (for storing vertices, materials, etc.)
-- Impl mtl file parsing with mat_buf and mapping fill
-- Impl usemtl (setting cur mat) and applying to objects
-- Impl v/vt/vn parsing with storing in buf
+* Impl mtl file parsing with mat_buf and mapping fill
+* Impl usemtl (setting cur mat) and applying to objects
+* Impl v/vt/vn parsing with storing in buf
 - Impl f parsing (face creation with v and indices from buf, triangle split)
 - Add data from vt/vn to objects and rendering
+
 - Optimize parsing structures and allocations
+- Check for mem leaks
 
 Add debug modes:
 

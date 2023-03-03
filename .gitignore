@@ -55,3 +55,7 @@ dkms.conf
 
 # images
 *.png
+
+# scene files
+*.obj
+*.mtl
