@@ -3,7 +3,10 @@ Obj reader (not from beginning):
 * Impl mtl file parsing with mat_buf and mapping fill
 * Impl usemtl (setting cur mat) and applying to objects
 * Impl v/vt/vn parsing with storing in buf
-- Impl f parsing (face creation with v and indices from buf, triangle split)
+- Impl f parsing
+    * Impl get_index with neg indices
+    - Impl parsing of f item (number, /, //)
+    - Impl triangle slicing
 - Add data from vt/vn to objects and rendering
 
 - Optimize parsing structures and allocations

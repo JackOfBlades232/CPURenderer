@@ -33,6 +33,10 @@ typedef struct tag_file_read_state {
     material_name_pair *material_mapping;
 } file_read_state;
 
+typedef struct tag_vertex_info {
+    vec3d *v, *vt, *vn;
+} vertex_info;
+
 static char *get_dir_path(const char *filepath)
 {
     const char *p;
@@ -369,6 +373,49 @@ static int parse_vt(word_listp w_list, file_read_result *res,
 
     add_v_texcoord(state, vt);
     return 1;
+}
+
+static vec3d *get_vec3d_at_index(vec3d *buf, int idx, int buf_len)
+{
+    if (idx < 0)
+        idx += buf_len;
+
+    if (idx < 0 || idx >= buf_len)
+        return NULL;
+
+    return buf+idx;
+}
+
+static int parse_face_item(word_listp w_list, vertex_info *out)
+{
+    int result = 1;
+    int slash_cnt;
+    struct word *w;
+    char *vp, *vtp = NULL, *vnp = NULL;
+    char *cp;
+
+    w = word_list_pop_first(w_list);
+    if (!w)
+        return 0;
+
+    vp = (char *) word_content(w);
+    slash_cnt = 0;
+    for (cp = vp; *cp; cp++) {
+        if (*cp == '/') {
+            slash_cnt++;
+            *cp = '\0';
+            if (!vtp)
+                vtp = cp+1;
+            else if (!vnp) { 
+                vnp = cp+1;
+                break;
+            }
+        }
+    }
+
+    out->v = out->vt = out->vn = NULL;
+
+    /* impl sscanf-parsing for indices of v/vt/vn */
 }
 
 static int parse_f(word_listp w_list, file_read_result *res, 
