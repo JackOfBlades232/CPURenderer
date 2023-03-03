@@ -4,6 +4,7 @@
 #include "../image.h"
 #include "../camera.h"
 #include "../png_save.h"
+#include "../file_reader.h"
 #include <pngconf.h>
 #include <stddef.h>
 #include <stdint.h>
@@ -164,12 +165,47 @@ int test_triangle()
     return 0;
 }
 
+int test_obj_read()
+{
+    image img;
+    file_read_result *fres;
+    scene *s;
+    camera c;
+    material m;
+    int i;
+
+    fres = read_scene_from_files("./ftest.obj");
+    if (fres == NULL)
+        return 1;
+
+    s = create_scene_for_read_res(fres);
+    m = material_literal(0, 0, 0, 0, 0, 0, 0.5, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+
+    for (i = 0; i < s->objects_cnt; i++)
+        s->objects[i].mat = &m;
+
+    alloc_image(&img, 640, 480);
+
+    c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+
+    render(s, &c, &img);
+
+    save_img_to_png(&img, "./test_obj_read.png");
+
+    destroy_scene(s);
+    free(fres->mat_buf);
+    free(fres);
+    free_image(&img);
+    return 0;
+}
+
 int main()
 {
-    create_noise_img();
+    /* create_noise_img();
     test_camera_tracing();
     test_sphere();
     test_3_spheres();
-    test_triangle();
-    return 0;
+    test_triangle(); */
+    return test_obj_read();
+    /* return 0; */
 }

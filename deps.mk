@@ -8,6 +8,5 @@ mathd.o: src/mathd.c src/mathd.h src/geom.h
 png_save.o: src/png_save.c src/png_save.h src/image.h src/geom.h
 scene.o: src/scene.c src/scene.h src/geom.h src/camera.h src/image.h \
  src/raytracer.h src/debug.h
-reader_utils.o: src/reader_utils.c src/reader_utils.h
-scene_reader.o: src/scene_reader.c src/scene_reader.h src/scene.h \
- src/geom.h src/camera.h src/image.h src/reader_utils.h
+file_reader.o: src/file_reader.c src/file_reader.h src/scene.h src/geom.h \
+ src/camera.h src/image.h

@@ -1,5 +1,6 @@
 SRCMODULES = src/camera.c src/debug.c src/geom.c src/image.c \
-			 src/raytracer.c src/mathd.c src/png_save.c src/scene.c
+			 src/raytracer.c src/mathd.c src/png_save.c src/scene.c \
+			 src/file_reader.c
 OBJMODULES = $(SRCMODULES:.c=.o)
 CC = gcc
 CFLAGS = -g -Wall -I ~/Utils/headers/

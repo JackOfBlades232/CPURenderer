@@ -1,0 +1,21 @@
+Obj reader (not from beginning):
+- Impl file read state (for storing vertices, materials, etc.)
+- Impl mtl file parsing with mat_buf and mapping fill
+- Impl usemtl (setting cur mat) and applying to objects
+- Impl v/vt/vn parsing with storing in buf
+- Impl f parsing (face creation with v and indices from buf, triangle split)
+- Add data from vt/vn to objects and rendering
+- Optimize parsing structures and allocations
+
+Add debug modes:
+
+Add reflection and refraction:
+
+Misc:
+- Add C^2 to post-proc
+- When processing an intersection offset the pos by eps from surface
+    ( and remove checking for same object coll )
+
+Further improvements:
+- Improve speed with algo from SHAD tasks
+- Impl auto testing for png results (pix comp)
