@@ -1,10 +1,9 @@
 SRCMODULES = src/camera.c src/debug.c src/geom.c src/image.c \
-			 src/raytracer.c src/mathd.c src/png_save.c src/scene.c \
-			 src/reader_utils.c src/scene_reader.c
+			 src/raytracer.c src/mathd.c src/png_save.c src/scene.c
 OBJMODULES = $(SRCMODULES:.c=.o)
 CC = gcc
-CFLAGS = -g -Wall
-LFLAGS = -lm -lpng
+CFLAGS = -g -Wall -I ~/Utils/headers/
+LFLAGS = -lm -lpng -l:libtokeniz.a -L ~/Utils/lib/
 
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
