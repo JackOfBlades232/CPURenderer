@@ -1,0 +1,4 @@
+newmtl main
+    Kd 0 0 1
+    Ks 0 1 0
+    Ns 1000
