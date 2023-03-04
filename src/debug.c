@@ -1,5 +1,7 @@
 /* CPURenderer/src/debug.h */
 #include "debug.h"
+#include "geom.h"
+#include "scene.h"
 
 #include <stdio.h>
 
@@ -21,4 +23,15 @@ void print_material_info(material *m)
     printf("Ns: %lf, Ni: %lf\n", m->ns, m->ni);
     printf("al: ");
     print_vec(m->al);
+}
+
+void print_triangle_info(scene_obj *tr)
+{
+    if (tr->type != triangle)
+        return;
+
+    printf("Vertices:\n");
+    print_vec(tr->data.tr.v1);
+    print_vec(tr->data.tr.v2);
+    print_vec(tr->data.tr.v3);
 }

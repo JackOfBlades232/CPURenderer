@@ -3,14 +3,21 @@ Obj reader (not from beginning):
 * Impl mtl file parsing with mat_buf and mapping fill
 * Impl usemtl (setting cur mat) and applying to objects
 * Impl v/vt/vn parsing with storing in buf
-- Impl f parsing
+* Impl f parsing
     * Impl get_index with neg indices
-    - Impl parsing of f item (number, /, //)
-    - Impl triangle slicing
-- Add data from vt/vn to objects and rendering
+    * Impl parsing of f item (number, /, //)
+    * Impl triangle slicing
 
+Make classic box work:
+- Remake camera init to look-at
+- Debug and fix classic-box
+
+Obj reader polish:
+- Add mtl zero literal
 - Optimize parsing structures and allocations
 - Check for mem leaks
+
+Add vertex normals and vertex texcoord to triangles (and obj parsing):
 
 Add debug modes:
 

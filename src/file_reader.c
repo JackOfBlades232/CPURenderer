@@ -240,7 +240,7 @@ static int parse_newmtl(word_listp w_list, file_read_result *res,
 static int parse_mtl_line(word_listp w_list, file_read_result *res,
         file_read_state *state)
 {
-    int status = 0;
+    int status = 1;
     struct word *w;
     const char *tok;
 
@@ -379,6 +379,10 @@ static vec3d *get_vec3d_at_index(vec3d *buf, int idx, int buf_len)
 {
     if (idx < 0)
         idx += buf_len;
+    else
+        idx--;
+
+    printf("        idx: %d, buf_len: %d\n", idx, buf_len);
 
     if (idx < 0 || idx >= buf_len)
         return NULL;
@@ -386,24 +390,37 @@ static vec3d *get_vec3d_at_index(vec3d *buf, int idx, int buf_len)
     return buf+idx;
 }
 
-static int parse_face_item(word_listp w_list, vertex_info *out)
+static vec3d *parse_vec3d_index(const char *idx_str, vec3d *buf, int buf_len)
 {
-    int result = 1;
+    int scan_res;
+    int idx;
+    scan_res = sscanf(idx_str, "%d", &idx);
+    printf("    sscanf res: %d\n", scan_res);
+    if (scan_res == 1)
+        return get_vec3d_at_index(buf, idx, buf_len);
+    else
+        return NULL;
+}
+
+static int parse_face_item(word_listp w_list, file_read_state *state,
+        vertex_info *out)
+{
     int slash_cnt;
     struct word *w;
-    char *vp, *vtp = NULL, *vnp = NULL;
-    char *cp;
+    const char *vp, *vtp = NULL, *vnp = NULL;
+    const char *cp;
 
     w = word_list_pop_first(w_list);
     if (!w)
         return 0;
 
-    vp = (char *) word_content(w);
+    printf("Parsing of fitem started\n");
+
+    vp = word_content(w);
     slash_cnt = 0;
     for (cp = vp; *cp; cp++) {
         if (*cp == '/') {
             slash_cnt++;
-            *cp = '\0';
             if (!vtp)
                 vtp = cp+1;
             else if (!vnp) { 
@@ -413,15 +430,61 @@ static int parse_face_item(word_listp w_list, vertex_info *out)
         }
     }
 
-    out->v = out->vt = out->vn = NULL;
+    out->vt = out->vn = NULL;
 
-    /* impl sscanf-parsing for indices of v/vt/vn */
+    out->v = parse_vec3d_index(vp, state->vertices, state->vert_cnt);
+    if (slash_cnt >= 1)
+        out->vt = parse_vec3d_index(vtp, state->v_texcoords, state->v_texc_cnt);
+    if (slash_cnt >= 2)
+        out->vn = parse_vec3d_index(vnp, state->v_normals, state->v_norm_cnt);
+
+    printf("Parse %s, res: %d\n", word_content(w), out->v != NULL);
+
+    word_free(w);
+
+    return out->v != NULL;
+}
+
+static scene_obj triangle_from_vertex_infos(vertex_info *v1,
+        vertex_info *v2, vertex_info *v3, file_read_state *state)
+
+{
+    scene_obj tr;
+    tr.type = triangle;
+    tr.mat = state->cur_mat;
+    tr.data.tr = trianlge_literal(
+            v1->v->x, v1->v->y, v1->v->z,
+            v2->v->x, v2->v->y, v2->v->z,
+            v3->v->x, v3->v->y, v3->v->z
+            );
+    return tr;
 }
 
 static int parse_f(word_listp w_list, file_read_result *res, 
         file_read_state *state)
 {
-    return 0;
+    vertex_info vi1, vi2, vi3, tmp;
+
+    if (!parse_face_item(w_list, state, &vi1) || 
+            !parse_face_item(w_list, state, &vi2) || 
+            !parse_face_item(w_list, state, &vi3)) {
+        return 0;
+    }
+
+    add_object(res, triangle_from_vertex_infos(&vi1, &vi2, &vi3, state));
+
+    printf("Added first tr\n");
+
+    while (parse_face_item(w_list, state, &tmp)) {
+        printf("Parsed next vert\n");
+        vi2 = vi3;
+        vi3 = tmp;
+        add_object(res, triangle_from_vertex_infos(&vi1, &vi2, &vi3, state));
+    }
+
+    printf("Parsed face\n");
+
+    return 1;
 }
 
 static int parse_S(word_listp w_list, file_read_result *res,
@@ -456,7 +519,7 @@ static int parse_P(word_listp w_list, file_read_result *res)
 static int parse_obj_line(word_listp w_list, file_read_result *res,
         file_read_state *state, const char *dirpath)
 {
-    int status = 0;
+    int status = 1;
     struct word *w;
     const char *tok;
 
@@ -483,6 +546,9 @@ static int parse_obj_line(word_listp w_list, file_read_result *res,
         status = parse_S(w_list, res, state);
     else if (strcmp(tok, "P") == 0)
         status = parse_P(w_list, res);
+
+    if (status != 1)
+        printf("Failed, token: %s\n", tok);
 
     word_free(w);
 

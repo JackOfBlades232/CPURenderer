@@ -131,7 +131,7 @@ int test_3_spheres()
     return 0;
 }
 
-int test_triangle()
+int test_triangle_simple()
 {
     image img;
     scene s;
@@ -165,26 +165,34 @@ int test_triangle()
     return 0;
 }
 
-int test_obj_read()
+int test_gen_case(const char *obj_path, const char *png_save_path,
+        camera *c)
 {
     image img;
     file_read_result *fres;
     scene *s;
-    camera c;
 
-    fres = read_scene_from_files("./ftest.obj");
+    fres = read_scene_from_files(obj_path);
     if (fres == NULL)
         return 1;
 
     s = create_scene_for_read_res(fres);
 
+    printf("%ld\n", s->objects_cnt);
+    for (size_t i = 0; i < s->objects_cnt; i++) {
+        putchar('\n');
+        print_triangle_info(s->objects+i);
+        print_material_info(s->objects[i].mat);
+    }
+
+    printf("\n%ld\n", s->lights_cnt);
+    print_vec(s->lights[0].pos);
+
     alloc_image(&img, 640, 480);
 
-    c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    render(s, c, &img);
 
-    render(s, &c, &img);
-
-    save_img_to_png(&img, "./test_obj_read.png");
+    save_img_to_png(&img, png_save_path);
 
     destroy_scene(s);
     free(fres->mat_buf);
@@ -193,13 +201,33 @@ int test_obj_read()
     return 0;
 }
 
+int test_shading_parts()
+{
+    camera c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    return test_gen_case("./ftests/shading_parts/scene.obj", 
+            "shading_parts.png", &c);
+}
+
+int test_triangle()
+{
+    camera c = camera_literal(0, 2, 0, 0, -1, 0, 0, 0, -1, 90, 1);
+    return test_gen_case("./ftests/triangle/scene.obj", 
+            "triangle.png", &c);
+}
+
+int test_classic_box()
+{
+    camera c = camera_literal(-0.5, 1.5, 1, 0.5, 0, -1, 0, 1, 0, 90, 1);
+    return test_gen_case("./ftests/classic_box/scene.obj", 
+            "classic_box.png", &c);
+}
+
 int main()
 {
-    /* create_noise_img();
-    test_camera_tracing();
-    test_sphere();
-    test_3_spheres();
-    test_triangle(); */
-    return test_obj_read();
-    /* return 0; */
+    if (test_shading_parts() != 0)
+        return 1;
+    if (test_triangle() != 0)
+        return 2;
+    if (test_classic_box() != 0)
+        return 3;
 }

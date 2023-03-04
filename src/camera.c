@@ -10,8 +10,8 @@ camera camera_literal(double pos_x, double pos_y, double pos_z,
 {
     camera c;
     c.pos = vec3d_literal(pos_x, pos_y, pos_z); 
-    c.dir = vec3d_literal(dir_x, dir_y, dir_z);
-    c.up = vec3d_literal(up_x, up_y, up_z);
+    c.dir = vec3d_normalized(vec3d_literal(dir_x, dir_y, dir_z));
+    c.up = vec3d_normalized(vec3d_literal(up_x, up_y, up_z));
 
     /* precalcualte camera right vector */
     c.right = vec3d_cross(c.dir, c.up);
