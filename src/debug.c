@@ -35,3 +35,11 @@ void print_triangle_info(scene_obj *tr)
     print_vec(tr->data.tr.v2);
     print_vec(tr->data.tr.v3);
 }
+
+void print_light_info(light_src *l)
+{
+    printf("Pos: ");
+    print_vec(l->pos);
+    printf("Illum: ");
+    print_vec(l->illum);
+}

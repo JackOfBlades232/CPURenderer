@@ -8,5 +8,6 @@
 void print_vec(vec3d v);
 void print_material_info(material *m);
 void print_triangle_info(scene_obj *tr);
+void print_light_info(light_src *l);
 
 #endif 

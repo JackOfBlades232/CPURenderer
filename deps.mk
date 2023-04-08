@@ -1,4 +1,4 @@
-camera.o: src/camera.c src/camera.h src/geom.h src/image.h
+camera.o: src/camera.c src/camera.h src/geom.h src/image.h src/mathd.h
 debug.o: src/debug.c src/debug.h src/geom.h src/scene.h src/camera.h \
  src/image.h
 geom.o: src/geom.c src/mathd.h src/geom.h

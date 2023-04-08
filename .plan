@@ -9,7 +9,7 @@ Obj reader (not from beginning):
     * Impl triangle slicing
 
 Make classic box work:
-- Remake camera init to look-at
+* Remake camera init to look-at
 - Debug and fix classic-box
 
 Obj reader polish:

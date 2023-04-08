@@ -1,20 +1,25 @@
 /* CPURenderer/src/camera.c */
 #include "camera.h"
 #include "geom.h"
+#include "mathd.h"
 #include <math.h>
 
-camera camera_literal(double pos_x, double pos_y, double pos_z, 
-        double dir_x, double dir_y, double dir_z,
-        double up_x, double up_y, double up_z, 
+camera camera_from_look_at(double pos_x, double pos_y, double pos_z, 
+        double at_x, double at_y, double at_z,
         double fov, double foc_l)
 {
     camera c;
     c.pos = vec3d_literal(pos_x, pos_y, pos_z); 
-    c.dir = vec3d_normalized(vec3d_literal(dir_x, dir_y, dir_z));
-    c.up = vec3d_normalized(vec3d_literal(up_x, up_y, up_z));
+    c.dir = vec3d_normalized(vec3d_sub(vec3d_literal(at_x, at_y, at_z), c.pos));
 
-    /* precalcualte camera right vector */
-    c.right = vec3d_cross(c.dir, c.up);
+    /* Choose rigth as perpendicular in xz plane and flat, so that camera is
+     * not tilted */
+    if (dbl_is_zero(c.dir.x) && dbl_is_zero(c.dir.z))
+        c.right = vec3d_literal(1, 0, 0);
+    else
+        c.right = vec3d_normalized(vec3d_literal(-c.dir.z, 0, c.dir.x));
+    
+    c.up = vec3d_cross(c.right, c.dir);
 
     /* and precalcualte vector to the center of the screen (foc_len*dir) */
     c.foc_v = vec3d_scale(c.dir, foc_l);

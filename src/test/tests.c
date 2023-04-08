@@ -47,7 +47,8 @@ void test_camera_tracing()
 
     img.width = 19;
     img.height = 11;
-    c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    // c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
     for (i = 0; i < img.width; i++)
         for (j = 0; j < img.height; j++) {
@@ -76,7 +77,7 @@ int test_sphere()
     s.objects[0].data.s = sphere_literal(1, 1, -2.5, 0.5);
     s.objects[0].mat = &m;
 
-    c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
     render(&s, &c, &img);
 
@@ -121,7 +122,7 @@ int test_3_spheres()
     s.lights[0].pos = vec3d_literal(-0.2, 0, 0.5);
     s.lights[0].illum = vec3d_literal(0.5, 0.5, 0.5);
 
-    c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
     render(&s, &c, &img);
 
@@ -155,7 +156,7 @@ int test_triangle_simple()
     s.lights[0].pos = vec3d_literal(0, 2, -0.5);
     s.lights[0].illum = vec3d_literal(1, 1, 1);
 
-    c = camera_literal(0, 2, 0, 0, -1, 0, 0, 0, -1, 90, 1);
+    c = camera_from_look_at(0, 2, 0, 0, 0, 0, 90, 1);
 
     render(&s, &c, &img);
 
@@ -166,7 +167,7 @@ int test_triangle_simple()
 }
 
 int test_gen_case(const char *obj_path, const char *png_save_path,
-        camera *c)
+        camera *c, size_t res_x, size_t res_y)
 {
     image img;
     file_read_result *fres;
@@ -178,7 +179,7 @@ int test_gen_case(const char *obj_path, const char *png_save_path,
 
     s = create_scene_for_read_res(fres);
 
-    alloc_image(&img, 640, 480);
+    alloc_image(&img, res_x, res_y);
 
     render(s, c, &img);
 
@@ -193,31 +194,43 @@ int test_gen_case(const char *obj_path, const char *png_save_path,
 
 int test_shading_parts()
 {
-    camera c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
+    camera c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
     return test_gen_case("./ftests/shading_parts/scene.obj", 
-            "shading_parts.png", &c);
+            "shading_parts.png", &c, 640, 480);
 }
 
 int test_triangle()
 {
-    camera c = camera_literal(0, 2, 0, 0, -1, 0, 0, 0, -1, 90, 1);
+    camera c = camera_from_look_at(0, 2, 0, 0, 0, 0, 90, 1);
     return test_gen_case("./ftests/triangle/scene.obj", 
-            "triangle.png", &c);
+            "triangle.png", &c, 640, 480);
 }
 
-int test_classic_box()
+int test_classic_box_first()
 {
-    camera c = camera_literal(-0.5, 1.5, 1, 0.5, 0, -1, 0, 1, 0, 90, 1);
+    camera c = camera_from_look_at(-0.5, 1.5, 0.98, 0, 1, 0, 90, 1);
     return test_gen_case("./ftests/classic_box/scene.obj", 
-            "classic_box.png", &c);
+            "classic_box_1.png", &c, 500, 500);
+}
+
+int test_classic_box_second()
+{
+    camera c = camera_from_look_at(-0.9, 1.9, -1, 0, 0, 0, 90, 1);
+    return test_gen_case("./ftests/classic_box/scene.obj", 
+            "classic_box_2.png", &c, 500, 500);
 }
 
 int main()
 {
+    /*
     printf("Shading parts: %s\n",
             test_shading_parts() == 0 ? "passed" : "failed");
     printf("Triangle: %s\n",
             test_triangle() == 0 ? "passed" : "failed");
-    printf("Classic box: %s\n",
-            test_classic_box() == 0 ? "passed" : "failed");
+    */
+
+    printf("Classic box 1: %s\n",
+            test_classic_box_first() == 0 ? "passed" : "failed");
+    printf("Classic box 2: %s\n",
+            test_classic_box_second() == 0 ? "passed" : "failed");
 }
