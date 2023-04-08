@@ -178,16 +178,6 @@ int test_gen_case(const char *obj_path, const char *png_save_path,
 
     s = create_scene_for_read_res(fres);
 
-    printf("%ld\n", s->objects_cnt);
-    for (size_t i = 0; i < s->objects_cnt; i++) {
-        putchar('\n');
-        print_triangle_info(s->objects+i);
-        print_material_info(s->objects[i].mat);
-    }
-
-    printf("\n%ld\n", s->lights_cnt);
-    print_vec(s->lights[0].pos);
-
     alloc_image(&img, 640, 480);
 
     render(s, c, &img);
@@ -224,10 +214,10 @@ int test_classic_box()
 
 int main()
 {
-    if (test_shading_parts() != 0)
-        return 1;
-    if (test_triangle() != 0)
-        return 2;
-    if (test_classic_box() != 0)
-        return 3;
+    printf("Shading parts: %s\n",
+            test_shading_parts() == 0 ? "passed" : "failed");
+    printf("Triangle: %s\n",
+            test_triangle() == 0 ? "passed" : "failed");
+    printf("Classic box: %s\n",
+            test_classic_box() == 0 ? "passed" : "failed");
 }

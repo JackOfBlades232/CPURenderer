@@ -382,8 +382,6 @@ static vec3d *get_vec3d_at_index(vec3d *buf, int idx, int buf_len)
     else
         idx--;
 
-    printf("        idx: %d, buf_len: %d\n", idx, buf_len);
-
     if (idx < 0 || idx >= buf_len)
         return NULL;
 
@@ -395,7 +393,6 @@ static vec3d *parse_vec3d_index(const char *idx_str, vec3d *buf, int buf_len)
     int scan_res;
     int idx;
     scan_res = sscanf(idx_str, "%d", &idx);
-    printf("    sscanf res: %d\n", scan_res);
     if (scan_res == 1)
         return get_vec3d_at_index(buf, idx, buf_len);
     else
@@ -413,8 +410,6 @@ static int parse_face_item(word_listp w_list, file_read_state *state,
     w = word_list_pop_first(w_list);
     if (!w)
         return 0;
-
-    printf("Parsing of fitem started\n");
 
     vp = word_content(w);
     slash_cnt = 0;
@@ -437,8 +432,6 @@ static int parse_face_item(word_listp w_list, file_read_state *state,
         out->vt = parse_vec3d_index(vtp, state->v_texcoords, state->v_texc_cnt);
     if (slash_cnt >= 2)
         out->vn = parse_vec3d_index(vnp, state->v_normals, state->v_norm_cnt);
-
-    printf("Parse %s, res: %d\n", word_content(w), out->v != NULL);
 
     word_free(w);
 
@@ -473,16 +466,11 @@ static int parse_f(word_listp w_list, file_read_result *res,
 
     add_object(res, triangle_from_vertex_infos(&vi1, &vi2, &vi3, state));
 
-    printf("Added first tr\n");
-
     while (parse_face_item(w_list, state, &tmp)) {
-        printf("Parsed next vert\n");
         vi2 = vi3;
         vi3 = tmp;
         add_object(res, triangle_from_vertex_infos(&vi1, &vi2, &vi3, state));
     }
-
-    printf("Parsed face\n");
 
     return 1;
 }
@@ -546,9 +534,6 @@ static int parse_obj_line(word_listp w_list, file_read_result *res,
         status = parse_S(w_list, res, state);
     else if (strcmp(tok, "P") == 0)
         status = parse_P(w_list, res);
-
-    if (status != 1)
-        printf("Failed, token: %s\n", tok);
 
     word_free(w);
 
