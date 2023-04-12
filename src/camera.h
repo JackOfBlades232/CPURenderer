@@ -12,7 +12,7 @@ typedef struct tag_camera {
     double fov_h;
 } camera;
 
-// Currently no tilt, may add as angle in degrees
+// @FEATURE add tilt option in degrees, currently no tilt
 camera camera_from_look_at(double pos_x, double pos_y, double pos_z, 
         double at_x, double at_y, double at_z,
         double fov, double foc_l);
