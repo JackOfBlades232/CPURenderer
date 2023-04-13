@@ -1,17 +1,19 @@
 /* CPURenderer/src/test/tests.c */
-#include "../geom.h"
-#include "../scene.h"
-#include "../image.h"
-#include "../camera.h"
-#include "../png_save.h"
-#include "../file_reader.h"
+#include "src/geom.h"
+#include "src/scene.h"
+#include "src/image.h"
+#include "src/camera.h"
+#include "src/png_save.h"
+#include "src/file_reader.h"
 #include <pngconf.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "../debug.h"
+#include "src/debug.h"
+
+static render_mode rmode = rmode_full;
 
 double random_val()
 {
@@ -79,7 +81,7 @@ int test_sphere()
 
     c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
-    render(&s, &c, rmode_full, &img);
+    render(&s, &c, rmode, &img);
 
     save_img_to_png(&img, "./test_sphere.png");
     free(s.objects);
@@ -124,7 +126,7 @@ int test_3_spheres()
 
     c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
-    render(&s, &c, rmode_full, &img);
+    render(&s, &c, rmode, &img);
 
     save_img_to_png(&img, "./test_3_spheres.png");
     free(s.objects);
@@ -158,7 +160,7 @@ int test_triangle_simple()
 
     c = camera_from_look_at(0, 2, 0, 0, 0, 0, 90, 1);
 
-    render(&s, &c, rmode_full, &img);
+    render(&s, &c, rmode, &img);
 
     save_img_to_png(&img, "./test_triangle.png");
     free(s.objects);
@@ -181,7 +183,7 @@ int test_gen_case(const char *obj_path, const char *png_save_path,
 
     alloc_image(&img, res_x, res_y);
 
-    render(s, c, rmode_full, &img);
+    render(s, c, rmode, &img);
 
     save_img_to_png(&img, png_save_path);
 
@@ -230,7 +232,7 @@ int main()
     */
 
     printf("Classic box 1: %s\n",
-            test_classic_box_first() == 0 ? "passed" : "failed");
+           test_classic_box_first() == 0 ? "passed" : "failed");
     printf("Classic box 2: %s\n",
-            test_classic_box_second() == 0 ? "passed" : "failed");
+           test_classic_box_second() == 0 ? "passed" : "failed");
 }

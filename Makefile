@@ -1,6 +1,4 @@
-SRCMODULES = src/camera.c src/debug.c src/geom.c src/image.c \
-			 src/raytracer.c src/mathd.c src/png_save.c src/scene.c \
-			 src/file_reader.c
+SRCMODULES = $(shell find src -type f -name '*.c')
 OBJMODULES = $(SRCMODULES:.c=.o)
 CC = gcc
 CFLAGS = -g -Wall -I ~/Utils/headers/
@@ -9,15 +7,23 @@ LFLAGS = -lm -lpng -l:libtokeniz.a -L ~/Utils/lib/
 %.o: %.c %.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
-test: src/test/tests.c $(OBJMODULES)
+test: test.c $(OBJMODULES)
 	$(CC) $(CFLAGS) $^ $(LFLAGS) -o $@
 
 ifneq (clean, $(MAKECMDGOALS))
+ifneq (cl_meta, $(MAKECMDGOALS))
 -include deps.mk
+endif
 endif
 
 deps.mk: $(SRCMODULES)
 	$(CC) -MM $^ > $@
 
+tags: 
+	ctags *.c src/*.c src/*.h
+
 clean:
-	rm -f *.o src/*.o src/test/*.o test* prog*
+	rm -f *.o src/*.o test prog
+
+cl_meta:
+	rm -f deps.mk tags

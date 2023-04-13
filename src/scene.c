@@ -52,7 +52,7 @@ int render(const scene *s, const camera *c, render_mode rmode, image *img)
             set_img_pixel(img, color, x, img->height-y-1);
         }
 
-    post_process(img);
+    post_process(img, rmode);
 
     return 1;
 }

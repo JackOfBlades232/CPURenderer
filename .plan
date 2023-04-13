@@ -9,8 +9,8 @@ Obj reader (not from beginning):
     * Impl triangle slicing
 
 Add debug modes:
+* Normal: color = 1/2normal + 1/2, where normal turned away from camera
 - Depth: color = depth/max depth (black-white)
-- Normal: color = 1/2normal + 1/2, where normal turned away from camera
 
 Make classic box work:
 * Remake camera init to look-at

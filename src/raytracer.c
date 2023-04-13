@@ -29,23 +29,24 @@ static vec3d get_normal(vec3d point, const scene_obj *obj, vec3d view_point)
     return vec3d_literal(0, 0, 0);
 }
 
-static scene_obj *find_closest_object(ray r, const scene *s, vec3d *pos_out)
+static scene_obj *find_closest_object(ray r, const scene *s,
+                                      vec3d *pos_out, double *dist)
 {
     scene_obj *obj_p, *closest;
-    double dist, min_dist;
+    double cur_dist;
     vec3d pos;
     int intersects;
 
     closest = NULL;
-    min_dist = DBL_MAX;
+    *dist = DBL_MAX;
 
     for (obj_p = s->objects; obj_p - s->objects < s->objects_cnt; obj_p++) {
-        intersects = intersect_ray(r, obj_p, &pos, &dist); 
+        intersects = intersect_ray(r, obj_p, &pos, &cur_dist); 
         if (!intersects)
             continue;
 
-        if (dist < min_dist) {
-            min_dist = dist;
+        if (cur_dist < *dist) {
+            *dist = cur_dist;
             closest = obj_p;
             *pos_out = pos;
         }
@@ -164,8 +165,9 @@ vec3d trace_ray(ray r, const scene *s, const camera *c,
 {
     scene_obj *hit_obj;
     vec3d hit_point, hit_normal;
+    double dist;
 
-    hit_obj = find_closest_object(r, s, &hit_point);
+    hit_obj = find_closest_object(r, s, &hit_point, &dist);
     if (!hit_obj)
         return vec3d_zero();
     hit_normal = get_normal(hit_point, hit_obj, c->pos);
@@ -174,12 +176,10 @@ vec3d trace_ray(ray r, const scene *s, const camera *c,
         case rmode_full:
             return shade(hit_point, hit_normal, c->pos, hit_obj, s, cur_depth);
         case rmode_depth:
-            // @TODO implement 
-            return vec3d_zero();
+            return vec3d_scale(vec3d_one(), dist);
         case rmode_normal:
-            // @TODO implement
-            return vec3d_zero();
-            return vec3d_zero();
+            // For visualisation take normal facing away from camera
+            return vec3d_scale(hit_normal, -1);
         default:
             return vec3d_zero();
     }

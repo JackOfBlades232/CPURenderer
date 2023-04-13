@@ -29,6 +29,11 @@ vec3d vec3d_one()
     return vec3d_literal(1, 1, 1);
 }
 
+int vec3d_is_zero(vec3d v)
+{
+    return dbl_is_zero(v.x) && dbl_is_zero(v.y) && dbl_is_zero(v.z);
+}
+
 vec3d vec3d_neg(vec3d v)
 {
     return vec3d_literal(-v.x, -v.y, -v.z);
