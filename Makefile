@@ -19,7 +19,7 @@ endif
 deps.mk: $(SRCMODULES)
 	$(CC) -MM $^ > $@
 
-tags: 
+tags: test.c $(SRCMODULES) $(SRCMODULES:.c=.h) 
 	ctags *.c src/*.c src/*.h
 
 clean:

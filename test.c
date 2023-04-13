@@ -49,7 +49,6 @@ void test_camera_tracing()
 
     img.width = 19;
     img.height = 11;
-    // c = camera_literal(0, 0, 0, 0, 0, -1, 0, 1, 0, 90, 1);
     c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
     for (i = 0; i < img.width; i++)
@@ -224,12 +223,10 @@ int test_classic_box_second()
 
 int main()
 {
-    /*
     printf("Shading parts: %s\n",
             test_shading_parts() == 0 ? "passed" : "failed");
     printf("Triangle: %s\n",
             test_triangle() == 0 ? "passed" : "failed");
-    */
 
     printf("Classic box 1: %s\n",
            test_classic_box_first() == 0 ? "passed" : "failed");

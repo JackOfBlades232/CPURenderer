@@ -71,6 +71,7 @@ free_read_result	src/file_reader.c	/^static void free_read_result(file_read_resu
 gamma_correct	src/image.c	/^static vec3d gamma_correct(vec3d color)$/;"	f	typeref:typename:vec3d	file:
 get_camera_ray	src/camera.c	/^ray get_camera_ray(const camera *c, size_t x, size_t y, image *img)$/;"	f	typeref:typename:ray
 get_dir_path	src/file_reader.c	/^static char *get_dir_path(const char *filepath)$/;"	f	typeref:typename:char *	file:
+get_max_depth	src/image.c	/^double get_max_depth(image *img)$/;"	f	typeref:typename:double
 get_normal	src/raytracer.c	/^static vec3d get_normal(vec3d point, const scene_obj *obj, vec3d view_point)$/;"	f	typeref:typename:vec3d	file:
 get_sphere_normal	src/geom.c	/^vec3d get_sphere_normal(vec3d point, const sphere_obj *s)$/;"	f	typeref:typename:vec3d
 get_triangle_normal	src/geom.c	/^vec3d get_triangle_normal(vec3d point, const triangle_obj *tr,$/;"	f	typeref:typename:vec3d
@@ -139,7 +140,7 @@ print_light_info	src/debug.c	/^void print_light_info(light_src *l)$/;"	f	typeref
 print_material_info	src/debug.c	/^void print_material_info(material *m)$/;"	f	typeref:typename:void
 print_triangle_info	src/debug.c	/^void print_triangle_info(scene_obj *tr)$/;"	f	typeref:typename:void
 print_vec	src/debug.c	/^void print_vec(vec3d v)$/;"	f	typeref:typename:void
-process_color	src/image.c	/^static vec3d process_color(vec3d color, render_mode rmode)$/;"	f	typeref:typename:vec3d	file:
+process_color	src/image.c	/^static vec3d process_color(vec3d color, render_mode rmode, double img_stat)$/;"	f	typeref:typename:vec3d	file:
 rad	src/geom.h	/^    double rad;$/;"	m	struct:tag_sphere_obj	typeref:typename:double
 random_val	test.c	/^double random_val()$/;"	f	typeref:typename:double
 random_vec	test.c	/^vec3d random_vec()$/;"	f	typeref:typename:vec3d
@@ -152,7 +153,7 @@ render	src/scene.c	/^int render(const scene *s, const camera *c, render_mode rmo
 render_mode	src/render_mode.h	/^} render_mode;$/;"	t	typeref:enum:tag_render_mode
 resize_buf_if_necessary	src/file_reader.c	/^static void *resize_buf_if_necessary(void *buf, int *cap,$/;"	f	typeref:typename:void *	file:
 right	src/camera.h	/^    vec3d dir, up, right;$/;"	m	struct:tag_camera	typeref:typename:vec3d
-rmode	test.c	/^render_mode rmode = rmode_normal;$/;"	v	typeref:typename:render_mode
+rmode	test.c	/^static render_mode rmode = rmode_normal;$/;"	v	typeref:typename:render_mode	file:
 rmode_depth	src/render_mode.h	/^    rmode_full, rmode_depth, rmode_normal$/;"	e	enum:tag_render_mode
 rmode_full	src/render_mode.h	/^    rmode_full, rmode_depth, rmode_normal$/;"	e	enum:tag_render_mode
 rmode_normal	src/render_mode.h	/^    rmode_full, rmode_depth, rmode_normal$/;"	e	enum:tag_render_mode

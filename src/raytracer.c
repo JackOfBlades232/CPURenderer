@@ -35,14 +35,12 @@ static scene_obj *find_closest_object(ray r, const scene *s,
     scene_obj *obj_p, *closest;
     double cur_dist;
     vec3d pos;
-    int intersects;
 
     closest = NULL;
     *dist = DBL_MAX;
 
     for (obj_p = s->objects; obj_p - s->objects < s->objects_cnt; obj_p++) {
-        intersects = intersect_ray(r, obj_p, &pos, &cur_dist); 
-        if (!intersects)
+        if (!intersect_ray(r, obj_p, &pos, &cur_dist))
             continue;
 
         if (cur_dist < *dist) {
@@ -73,7 +71,7 @@ static int light_is_seen(vec3d point, const light_src *l,
             continue;
         
         if (intersect_ray(lr, objp, &intersection, &dist) &&
-                dist <= dist_to_light)
+                dist < dist_to_light)
             return 0;
     }
 
@@ -178,8 +176,7 @@ vec3d trace_ray(ray r, const scene *s, const camera *c,
         case rmode_depth:
             return vec3d_scale(vec3d_one(), dist);
         case rmode_normal:
-            // For visualisation take normal facing away from camera
-            return vec3d_scale(hit_normal, -1);
+            return hit_normal;;
         default:
             return vec3d_zero();
     }

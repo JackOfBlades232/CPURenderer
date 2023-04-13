@@ -10,12 +10,13 @@ Obj reader (not from beginning):
 
 Add debug modes:
 * Normal: color = 1/2normal + 1/2, where normal turned away from camera
-- Depth: color = depth/max depth (black-white)
+* Depth: color = depth/max depth (black-white)
 
 Make classic box work:
 * Remake camera init to look-at
 - Debug and fix classic-box
-    - Problem: shapes drawn correctly, lighting is f-d up
+    - Remake hit tracing to +eps*normal
+    - Problem: shapes drawn correctly, depths&normals ok, lighting is f-d up
 
 Obj reader polish:
 - Add mtl zero literal
