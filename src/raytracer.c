@@ -159,16 +159,28 @@ static vec3d shade(vec3d point, vec3d normal, vec3d view_point,
     return color;
 }
 
-vec3d trace_ray(ray r, const scene *s, const camera *c, int cur_depth)
+vec3d trace_ray(ray r, const scene *s, const camera *c, 
+                int cur_depth, render_mode rmode)
 {
     scene_obj *hit_obj;
     vec3d hit_point, hit_normal;
 
     hit_obj = find_closest_object(r, s, &hit_point);
-
     if (!hit_obj)
         return vec3d_zero();
-
     hit_normal = get_normal(hit_point, hit_obj, c->pos);
-    return shade(hit_point, hit_normal, c->pos, hit_obj, s, cur_depth);
+
+    switch (rmode) {
+        case rmode_full:
+            return shade(hit_point, hit_normal, c->pos, hit_obj, s, cur_depth);
+        case rmode_depth:
+            // @TODO implement 
+            return vec3d_zero();
+        case rmode_normal:
+            // @TODO implement
+            return vec3d_zero();
+            return vec3d_zero();
+        default:
+            return vec3d_zero();
+    }
 }

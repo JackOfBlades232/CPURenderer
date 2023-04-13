@@ -79,7 +79,7 @@ int test_sphere()
 
     c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
-    render(&s, &c, &img);
+    render(&s, &c, rmode_full, &img);
 
     save_img_to_png(&img, "./test_sphere.png");
     free(s.objects);
@@ -124,7 +124,7 @@ int test_3_spheres()
 
     c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
-    render(&s, &c, &img);
+    render(&s, &c, rmode_full, &img);
 
     save_img_to_png(&img, "./test_3_spheres.png");
     free(s.objects);
@@ -158,7 +158,7 @@ int test_triangle_simple()
 
     c = camera_from_look_at(0, 2, 0, 0, 0, 0, 90, 1);
 
-    render(&s, &c, &img);
+    render(&s, &c, rmode_full, &img);
 
     save_img_to_png(&img, "./test_triangle.png");
     free(s.objects);
@@ -181,7 +181,7 @@ int test_gen_case(const char *obj_path, const char *png_save_path,
 
     alloc_image(&img, res_x, res_y);
 
-    render(s, c, &img);
+    render(s, c, rmode_full, &img);
 
     save_img_to_png(&img, png_save_path);
 

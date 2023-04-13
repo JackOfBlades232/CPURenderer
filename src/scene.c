@@ -37,7 +37,7 @@ void destroy_scene(scene *s)
     free(s);
 }
 
-int render(const scene *s, const camera *c, image *img)
+int render(const scene *s, const camera *c, render_mode rmode, image *img)
 {
     size_t x, y;
     ray r;
@@ -46,9 +46,9 @@ int render(const scene *s, const camera *c, image *img)
     for (x = 0; x < img->width; x++)
         for (y = 0; y < img->height; y++) {
             r = get_camera_ray(c, x, y, img);
-            color = trace_ray(r, s, c, 0);
+            color = trace_ray(r, s, c, 0, rmode);
 
-            /* Need to negate image inversion */
+            // Negating image inversion
             set_img_pixel(img, color, x, img->height-y-1);
         }
 

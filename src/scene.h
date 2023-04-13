@@ -5,6 +5,7 @@
 #include "geom.h"
 #include "camera.h"
 #include "image.h"
+#include "render_mode.h"
 #include <math.h>
 
 enum { max_depth = 2 };
@@ -45,6 +46,6 @@ material material_literal(double ka_x, double ka_y, double ka_z,
 scene *create_scene();
 void destroy_scene(scene *s);
 
-int render(const scene *s, const camera *c, image *img);
+int render(const scene *s, const camera *c, render_mode rmode, image *img);
 
 #endif 
