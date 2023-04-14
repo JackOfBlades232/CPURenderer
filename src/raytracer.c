@@ -70,9 +70,14 @@ static int light_is_seen(vec3d point, const light_src *l,
         if (objp == obj)
             continue;
         
+        // @BUG: when using distance a light source does not reach beyond
+        //  some radius
+
+        /*
         if (intersect_ray(lr, objp, &intersection, &dist) &&
-                dist < dist_to_light)
+                dist <= dist_to_light)
             return 0;
+        */
     }
 
     return 1;

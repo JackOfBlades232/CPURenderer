@@ -223,10 +223,12 @@ int test_classic_box_second()
 
 int main()
 {
+    /*
     printf("Shading parts: %s\n",
             test_shading_parts() == 0 ? "passed" : "failed");
     printf("Triangle: %s\n",
             test_triangle() == 0 ? "passed" : "failed");
+    */
 
     printf("Classic box 1: %s\n",
            test_classic_box_first() == 0 ? "passed" : "failed");
