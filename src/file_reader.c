@@ -428,8 +428,10 @@ static int parse_face_item(word_listp w_list, file_read_state *state,
     out->vt = out->vn = NULL;
 
     out->v = parse_vec3d_index(vp, state->vertices, state->vert_cnt);
+    /*
     if (slash_cnt >= 1)
         out->vt = parse_vec3d_index(vtp, state->v_texcoords, state->v_texc_cnt);
+    */
     if (slash_cnt >= 2)
         out->vn = parse_vec3d_index(vnp, state->v_normals, state->v_norm_cnt);
 
@@ -451,14 +453,12 @@ static scene_obj triangle_from_vertex_infos(vertex_info *v1,
             v3->v->x, v3->v->y, v3->v->z
             );
 
-    /*
     if (v1->vn && v2->vn && v3->vn) {
         tr.data.tr.has_vn = 1;
         tr.data.tr.vn1 = *(v1->v);
         tr.data.tr.vn2 = *(v2->v);
         tr.data.tr.vn3 = *(v3->v);
     } 
-    */
     
     return tr;
 }
