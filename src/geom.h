@@ -20,6 +20,8 @@ typedef struct tag_sphere_obj {
 typedef struct tag_triangle_obj {
     vec3d v1, v2, v3;
     vec3d normal;
+    vec3d vn1, vn2, vn3;
+    int has_vn;
 } triangle_obj;
 
 double deg2rad(double deg);

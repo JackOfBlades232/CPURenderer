@@ -25,6 +25,12 @@ material material_literal(double ka_x, double ka_y, double ka_z,
     return m;
 }
 
+material material_zero()
+{
+    material m = {0};
+    return m;
+}
+
 scene *create_scene()
 {
     return malloc(sizeof(scene));

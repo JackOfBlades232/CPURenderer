@@ -230,7 +230,6 @@ int test_deer()
 
 int main()
 {
-    /*
     printf("Shading parts: %s\n",
             test_shading_parts() == 0 ? "passed" : "failed");
     printf("Triangle: %s\n",
@@ -240,8 +239,9 @@ int main()
            test_classic_box_first() == 0 ? "passed" : "failed");
     printf("Classic box 2: %s\n",
            test_classic_box_second() == 0 ? "passed" : "failed");
-    */
 
-    printf("Deer: %s\n",
-           test_deer() == 0 ? "passed" : "failed");
+    /*
+       printf("Deer: %s\n",
+       test_deer() == 0 ? "passed" : "failed");
+    */
 }

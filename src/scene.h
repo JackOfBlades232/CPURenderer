@@ -42,6 +42,7 @@ material material_literal(double ka_x, double ka_y, double ka_z,
                           double ks_x, double ks_y, double ks_z,
                           double ns, double ni,
                           double al_x, double al_y, double al_z);
+material material_zero();
 
 scene *create_scene();
 void destroy_scene(scene *s);

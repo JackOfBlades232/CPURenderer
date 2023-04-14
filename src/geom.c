@@ -183,6 +183,7 @@ triangle_obj trianlge_literal(double x1, double y1, double z1,
     tr.v2 = vec3d_literal(x2, y2, z2);
     tr.v3 = vec3d_literal(x3, y3, z3);
     tr.normal = calculate_triangle_normal(&tr);
+    tr.has_vn = 0;
     return tr;
 }
 

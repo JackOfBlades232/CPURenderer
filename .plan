@@ -16,7 +16,10 @@ Make classic box work:
 * Remake camera init to look-at
 * Debug and fix classic-box
 
-Add vertex normals and vertex texcoord to triangles (and obj parsing):
+Add vertex normals to triangles (and obj parsing):
+- Add vn1, vn2, vn3, has_vnorm to triangle (should i normalize vns themselves?)
+- Implement calculation of triangle normal with bar coords
+    Coords are already calculated in intersection algo
 
 Add reflection and refraction:
 
@@ -24,5 +27,6 @@ Misc:
 * Add C^2 to post-proc
 
 Further improvements:
-- Improve speed with algo from SHAD tasks
-- Impl auto testing for png results (pix comp)
+- Improve speed with BVH
+- Impl auto testing for png results (pix comp) and test case creation
+- Uncomment vt reading and implement texturing

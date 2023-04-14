@@ -147,11 +147,13 @@ static void add_v_normal(file_read_state *state, vec3d vn)
             &state->v_norm_cap, &state->v_norm_cnt, vn);
 }
 
+/*
 static void add_v_texcoord(file_read_state *state, vec3d vt)
 {
     state->v_texcoords = add_vec_item(state->v_texcoords,
             &state->v_texc_cap, &state->v_texc_cnt, vt);
 }
+*/
 
 static void add_material(file_read_state *state, file_read_result *res,
         material mat, const char *mat_name)
@@ -227,11 +229,7 @@ static int parse_newmtl(word_listp w_list, file_read_result *res,
     if (!w)
         return 0;
 
-    add_material(
-        state, res,
-        material_literal(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0), 
-        word_content(w)
-    );
+    add_material(state, res, material_zero(), word_content(w));
     word_free(w);
 
     return 1;
@@ -363,6 +361,7 @@ static int parse_vn(word_listp w_list, file_read_result *res,
     return 1;
 }
 
+/*
 static int parse_vt(word_listp w_list, file_read_result *res, 
         file_read_state *state)
 {
@@ -374,6 +373,7 @@ static int parse_vt(word_listp w_list, file_read_result *res,
     add_v_texcoord(state, vt);
     return 1;
 }
+*/
 
 static vec3d *get_vec3d_at_index(vec3d *buf, int idx, int buf_len)
 {
@@ -450,6 +450,16 @@ static scene_obj triangle_from_vertex_infos(vertex_info *v1,
             v2->v->x, v2->v->y, v2->v->z,
             v3->v->x, v3->v->y, v3->v->z
             );
+
+    /*
+    if (v1->vn && v2->vn && v3->vn) {
+        tr.data.tr.has_vn = 1;
+        tr.data.tr.vn1 = *(v1->v);
+        tr.data.tr.vn2 = *(v2->v);
+        tr.data.tr.vn3 = *(v3->v);
+    } 
+    */
+    
     return tr;
 }
 
@@ -526,8 +536,8 @@ static int parse_obj_line(word_listp w_list, file_read_result *res,
         status = parse_v(w_list, res, state);
     else if (strcmp(tok, "vn") == 0)
         status = parse_vn(w_list, res, state);
-    else if (strcmp(tok, "vt") == 0)
-        status = parse_vt(w_list, res, state);
+    else if (strcmp(tok, "vt") == 0) // @FEATURE don't need texcoord yet
+        status = 1; // parse_vt(w_list, res, state);
     else if (strcmp(tok, "f") == 0)
         status = parse_f(w_list, res, state);
     else if (strcmp(tok, "S") == 0)

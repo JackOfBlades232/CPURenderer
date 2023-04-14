@@ -30,7 +30,6 @@ add_light	src/file_reader.c	/^static void add_light(file_read_result *res, light
 add_material	src/file_reader.c	/^static void add_material(file_read_state *state, file_read_result *res,$/;"	f	typeref:typename:void	file:
 add_object	src/file_reader.c	/^static void add_object(file_read_result *res, scene_obj obj)$/;"	f	typeref:typename:void	file:
 add_v_normal	src/file_reader.c	/^static void add_v_normal(file_read_state *state, vec3d vn)$/;"	f	typeref:typename:void	file:
-add_v_texcoord	src/file_reader.c	/^static void add_v_texcoord(file_read_state *state, vec3d vt)$/;"	f	typeref:typename:void	file:
 add_vec_item	src/file_reader.c	/^static vec3d *add_vec_item(vec3d *buf, int *cap, int *len, vec3d item)$/;"	f	typeref:typename:vec3d *	file:
 add_vertex	src/file_reader.c	/^static void add_vertex(file_read_state *state, vec3d v)$/;"	f	typeref:typename:void	file:
 al	src/scene.h	/^    vec3d al;$/;"	m	struct:tag_material	typeref:typename:vec3d
@@ -74,8 +73,10 @@ get_dir_path	src/file_reader.c	/^static char *get_dir_path(const char *filepath)
 get_max_depth	src/image.c	/^double get_max_depth(image *img)$/;"	f	typeref:typename:double
 get_normal	src/raytracer.c	/^static vec3d get_normal(vec3d point, const scene_obj *obj, vec3d view_point)$/;"	f	typeref:typename:vec3d	file:
 get_sphere_normal	src/geom.c	/^vec3d get_sphere_normal(vec3d point, const sphere_obj *s)$/;"	f	typeref:typename:vec3d
+get_square_cutoff	src/image.c	/^double get_square_cutoff(image *img)$/;"	f	typeref:typename:double
 get_triangle_normal	src/geom.c	/^vec3d get_triangle_normal(vec3d point, const triangle_obj *tr,$/;"	f	typeref:typename:vec3d
 get_vec3d_at_index	src/file_reader.c	/^static vec3d *get_vec3d_at_index(vec3d *buf, int idx, int buf_len)$/;"	f	typeref:typename:vec3d *	file:
+has_vn	src/geom.h	/^    int has_vn;$/;"	m	struct:tag_triangle_obj	typeref:typename:int
 height	src/image.h	/^    size_t width, height;$/;"	m	struct:tag_image	typeref:typename:size_t
 illum	src/scene.h	/^    vec3d illum;$/;"	m	struct:tag_light_src	typeref:typename:vec3d
 image	src/image.h	/^} image;$/;"	t	typeref:struct:tag_image
@@ -105,7 +106,9 @@ material	src/scene.h	/^} material;$/;"	t	typeref:struct:tag_material
 material_literal	src/scene.c	/^material material_literal(double ka_x, double ka_y, double ka_z,$/;"	f	typeref:typename:material
 material_mapping	src/file_reader.c	/^    material_name_pair *material_mapping;$/;"	m	struct:tag_file_read_state	typeref:typename:material_name_pair *	file:
 material_name_pair	src/file_reader.c	/^} material_name_pair;$/;"	t	typeref:struct:tag_material_name_pair	file:
+material_zero	src/scene.c	/^material material_zero()$/;"	f	typeref:typename:material
 max	src/mathd.c	/^double max(double a, double b)$/;"	f	typeref:typename:double
+max3	src/mathd.c	/^double max3(double a, double b, double c)$/;"	f	typeref:typename:double
 max_depth	src/scene.h	/^enum { max_depth = 2 };$/;"	e	enum:__anon8fb34f000103
 min	src/mathd.c	/^double min(double a, double b)$/;"	f	typeref:typename:double
 min_non_neg	src/mathd.c	/^double min_non_neg(double a, double b)$/;"	f	typeref:typename:double
@@ -132,7 +135,6 @@ parse_usemtl	src/file_reader.c	/^static int parse_usemtl(word_listp w_list, file
 parse_v	src/file_reader.c	/^static int parse_v(word_listp w_list, file_read_result *res, $/;"	f	typeref:typename:int	file:
 parse_vec3d_index	src/file_reader.c	/^static vec3d *parse_vec3d_index(const char *idx_str, vec3d *buf, int buf_len)$/;"	f	typeref:typename:vec3d *	file:
 parse_vn	src/file_reader.c	/^static int parse_vn(word_listp w_list, file_read_result *res, $/;"	f	typeref:typename:int	file:
-parse_vt	src/file_reader.c	/^static int parse_vt(word_listp w_list, file_read_result *res, $/;"	f	typeref:typename:int	file:
 pos	src/camera.h	/^    vec3d pos;$/;"	m	struct:tag_camera	typeref:typename:vec3d
 pos	src/scene.h	/^    vec3d pos;$/;"	m	struct:tag_light_src	typeref:typename:vec3d
 post_process	src/image.c	/^void post_process(image *img, render_mode rmode)$/;"	f	typeref:typename:void
@@ -191,12 +193,13 @@ test_3_spheres	test.c	/^int test_3_spheres()$/;"	f	typeref:typename:int
 test_camera_tracing	test.c	/^void test_camera_tracing()$/;"	f	typeref:typename:void
 test_classic_box_first	test.c	/^int test_classic_box_first()$/;"	f	typeref:typename:int
 test_classic_box_second	test.c	/^int test_classic_box_second()$/;"	f	typeref:typename:int
+test_deer	test.c	/^int test_deer()$/;"	f	typeref:typename:int
 test_gen_case	test.c	/^int test_gen_case(const char *obj_path, const char *png_save_path,$/;"	f	typeref:typename:int
 test_shading_parts	test.c	/^int test_shading_parts()$/;"	f	typeref:typename:int
 test_sphere	test.c	/^int test_sphere()$/;"	f	typeref:typename:int
 test_triangle	test.c	/^int test_triangle()$/;"	f	typeref:typename:int
 test_triangle_simple	test.c	/^int test_triangle_simple()$/;"	f	typeref:typename:int
-tone_map	src/image.c	/^static vec3d tone_map(vec3d color)$/;"	f	typeref:typename:vec3d	file:
+tone_map	src/image.c	/^static vec3d tone_map(vec3d color, double cutoff)$/;"	f	typeref:typename:vec3d	file:
 tr	src/scene.h	/^        triangle_obj tr;$/;"	m	union:tag_scene_obj::__anon8fb34f00020a	typeref:typename:triangle_obj
 trace_ray	src/raytracer.c	/^vec3d trace_ray(ray r, const scene *s, const camera *c, $/;"	f	typeref:typename:vec3d
 triangle	src/geom.h	/^typedef enum tag_object_type { sphere, triangle } object_type;$/;"	e	enum:tag_object_type
@@ -242,6 +245,9 @@ vert_cnt	src/file_reader.c	/^    int vert_cnt, v_norm_cnt, v_texc_cnt;$/;"	m	str
 vertex_info	src/file_reader.c	/^} vertex_info;$/;"	t	typeref:struct:tag_vertex_info	file:
 vertices	src/file_reader.c	/^    vec3d *vertices, *v_normals, *v_texcoords;$/;"	m	struct:tag_file_read_state	typeref:typename:vec3d *	file:
 vn	src/file_reader.c	/^    vec3d *v, *vt, *vn;$/;"	m	struct:tag_vertex_info	typeref:typename:vec3d *	file:
+vn1	src/geom.h	/^    vec3d vn1, vn2, vn3;$/;"	m	struct:tag_triangle_obj	typeref:typename:vec3d
+vn2	src/geom.h	/^    vec3d vn1, vn2, vn3;$/;"	m	struct:tag_triangle_obj	typeref:typename:vec3d
+vn3	src/geom.h	/^    vec3d vn1, vn2, vn3;$/;"	m	struct:tag_triangle_obj	typeref:typename:vec3d
 vt	src/file_reader.c	/^    vec3d *v, *vt, *vn;$/;"	m	struct:tag_vertex_info	typeref:typename:vec3d *	file:
 width	src/image.h	/^    size_t width, height;$/;"	m	struct:tag_image	typeref:typename:size_t
 word_listp	src/file_reader.c	/^typedef struct word_list *word_listp;$/;"	t	typeref:struct:word_list *	file:
