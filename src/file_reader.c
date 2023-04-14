@@ -456,9 +456,9 @@ static scene_obj triangle_from_vertex_infos(vertex_info *v1,
     // @TODO Should i normalize vn-s here?
     if (v1->vn && v2->vn && v3->vn) {
         tr.data.tr.has_vn = 1;
-        tr.data.tr.vn1 = *(v1->v);
-        tr.data.tr.vn2 = *(v2->v);
-        tr.data.tr.vn3 = *(v3->v);
+        tr.data.tr.vn1 = vec3d_normalized(*(v1->v));
+        tr.data.tr.vn2 = vec3d_normalized(*(v2->v));
+        tr.data.tr.vn3 = vec3d_normalized(*(v3->v));
     } 
     
     return tr;

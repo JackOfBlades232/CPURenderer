@@ -10,8 +10,9 @@ static int intersect_ray(ray r, const scene_obj *obj, vec3d *out, double *dist)
     switch (obj->type) {
         case sphere:
             return intersect_with_sphere(r, &(obj->data.s), out, dist);
-        case triangle:
-            return intersect_with_triangle(r, &(obj->data.tr), out, dist);
+        case triangle: // @HACK
+            return intersect_with_triangle(
+                    r, (triangle_obj *) &(obj->data.tr), out, dist);
     }
 
     return 0;

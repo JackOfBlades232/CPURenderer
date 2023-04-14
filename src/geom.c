@@ -190,10 +190,6 @@ triangle_obj trianlge_literal(double x1, double y1, double z1,
 vec3d get_triangle_normal(vec3d point, const triangle_obj *tr,
         vec3d view_point)
 {
-    return vec3d_dot(tr->normal, vec3d_sub(view_point, point)) > 0.0 ?
-        tr->normal :
-        vec3d_neg(tr->normal);
-
     if (tr->has_vn) {
         return vec3d_sum3(
                 vec3d_scale(tr->vn1, tr->last_hit_barycentric.x),
