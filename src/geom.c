@@ -96,9 +96,9 @@ vec3d vec3d_normalized(vec3d v)
 void vec3d_normalize(vec3d *v)
 {
     double inv_len = 1.0 / vec3d_len(*v);
-    v->x /= inv_len;
-    v->y /= inv_len;
-    v->z /= inv_len;
+    v->x *= inv_len;
+    v->y *= inv_len;
+    v->z *= inv_len;
 }
 
 vec3d vec3d_mul(vec3d v1, vec3d v2)

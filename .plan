@@ -15,8 +15,9 @@ Add debug modes:
 Make classic box work:
 * Remake camera init to look-at
 - Debug and fix classic-box
-    - Remake hit tracing to +eps*normal
-    - Problem: shapes drawn correctly, depths&normals ok, lighting is f-d up
+    - Problem: bug with distance to light when checking visibility
+        It might be a bug in dist to triangle calc, since depth is different
+        from tests
 
 Obj reader polish:
 - Add mtl zero literal
@@ -28,7 +29,7 @@ Add vertex normals and vertex texcoord to triangles (and obj parsing):
 Add reflection and refraction:
 
 Misc:
-- Add C^2 to post-proc
+* Add C^2 to post-proc
 - When processing an intersection offset the pos by eps from surface
     ( and remove checking for same object coll )
 

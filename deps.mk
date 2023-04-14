@@ -12,4 +12,4 @@ debug.o: src/debug.c src/debug.h src/geom.h src/scene.h src/camera.h \
  src/image.h src/render_mode.h
 png_save.o: src/png_save.c src/png_save.h src/image.h src/geom.h \
  src/render_mode.h
-image.o: src/image.c src/image.h src/geom.h src/render_mode.h
+image.o: src/image.c src/image.h src/geom.h src/render_mode.h src/mathd.h

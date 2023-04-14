@@ -1,6 +1,7 @@
 /* CPURenderer/src/image.c */
 #include "image.h"
 #include "geom.h"
+#include "mathd.h"
 #include <stddef.h>
 #include <stdlib.h>
 #include <math.h>
@@ -25,9 +26,13 @@ void set_img_pixel(image *img, vec3d color, size_t x, size_t y)
     *img_pixel_at(img, x, y) = color;
 }
 
-static vec3d tone_map(vec3d color)
+static vec3d tone_map(vec3d color, double cutoff)
 {
-    return vec3d_div(color, vec3d_sum(color, vec3d_one()));
+    return vec3d_div(
+            vec3d_mul(color,
+                vec3d_sum(vec3d_one(), vec3d_scale(color, cutoff))), 
+                vec3d_sum(color, vec3d_one())
+                );
 }
 
 static vec3d gamma_correct(vec3d color)
@@ -40,7 +45,7 @@ static vec3d process_color(vec3d color, render_mode rmode, double img_stat)
 
     switch (rmode) {
         case rmode_full:
-            return gamma_correct(tone_map(color));
+            return gamma_correct(tone_map(color, img_stat));
 
         case rmode_depth:
             if (vec3d_is_zero(color))
@@ -58,6 +63,22 @@ static vec3d process_color(vec3d color, render_mode rmode, double img_stat)
         default:
             return vec3d_zero();
     }
+}
+
+double get_square_cutoff(image *img)
+{
+    size_t x, y;
+    double max_col = .0;
+
+    for (x = 0; x < img->width; x++)
+        for (y = 0; y < img->height; y++) {
+            vec3d *colorp = img_pixel_at(img, x, y);
+            double mcol = max3(colorp->x, colorp->y, colorp->z);
+            if (max_col < mcol)
+                max_col = mcol;
+        }
+
+    return max_col*max_col;
 }
 
 double get_max_depth(image *img)
@@ -82,7 +103,7 @@ void post_process(image *img, render_mode rmode)
 
     switch (rmode) {
         case rmode_full:
-            // @TODO Should implement C^2 for tone mapping
+            img_stat = 1. / get_square_cutoff(img);
             break;
 
         case rmode_depth:

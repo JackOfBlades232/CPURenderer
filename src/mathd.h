@@ -7,6 +7,7 @@
 #define EPSILON 0.000001
 
 double max(double a, double b);
+double max3(double a, double b, double c);
 double min(double a, double b);
 double min_non_neg(double a, double b);
 void swap_dbl(double *a, double *b);

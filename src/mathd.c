@@ -7,6 +7,11 @@ double max(double a, double b)
     return a > b ? a : b;
 }
 
+double max3(double a, double b, double c)
+{
+    return max(a, max(b, c));
+}
+
 double min(double a, double b)
 {
     return a < b ? a : b;
