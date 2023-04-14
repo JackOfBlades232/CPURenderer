@@ -17,7 +17,7 @@ Make classic box work:
 * Debug and fix classic-box
 
 Add vertex normals to triangles (and obj parsing):
-- Add vn1, vn2, vn3, has_vnorm to triangle (should i normalize vns themselves?)
+* Add vn1, vn2, vn3, has_vnorm to triangle (should i normalize vns themselves?)
 - Implement calculation of triangle normal with bar coords
     Coords are already calculated in intersection algo
 

@@ -21,6 +21,7 @@ typedef struct tag_triangle_obj {
     vec3d v1, v2, v3;
     vec3d normal;
     vec3d vn1, vn2, vn3;
+    vec3d last_hit_barycentric;
     int has_vn;
 } triangle_obj;
 
@@ -35,7 +36,7 @@ vec3d vec3d_sum(vec3d v1, vec3d v2);
 vec3d vec3d_sum3(vec3d v1, vec3d v2, vec3d v3);
 vec3d vec3d_sub(vec3d v1, vec3d v2);
 vec3d vec3d_scale(vec3d v, double coeff);
-vec3d vec3d_pow(vec3d v, double p);
+vec3d vec3d_pow(vec3d v, double p_);
 vec3d vec3d_normalized(vec3d v);
 void vec3d_normalize(vec3d *v);
 vec3d vec3d_cross(vec3d v1, vec3d v2);
@@ -57,7 +58,6 @@ triangle_obj trianlge_literal(double x1, double y1, double z1,
                              double x3, double y3, double z3);
 vec3d get_triangle_normal(vec3d point, const triangle_obj *tr, 
         vec3d view_point);
-int intersect_with_triangle(ray r, const triangle_obj *tr, 
-        vec3d *out, double *dist);
+int intersect_with_triangle(ray r, triangle_obj *tr, vec3d *out, double *dist);
 
 #endif 
