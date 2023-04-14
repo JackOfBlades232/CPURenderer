@@ -221,6 +221,13 @@ int test_classic_box_second()
             "classic_box_2.png", &c, 500, 500);
 }
 
+int test_deer()
+{
+    camera c = camera_from_look_at(100, 200, 150, 0, 100, 0, 90, 1);
+    return test_gen_case("./ftests/deer/scene.obj", 
+            "deer.png", &c, 500, 500);
+}
+
 int main()
 {
     /*
@@ -228,10 +235,13 @@ int main()
             test_shading_parts() == 0 ? "passed" : "failed");
     printf("Triangle: %s\n",
             test_triangle() == 0 ? "passed" : "failed");
-    */
 
     printf("Classic box 1: %s\n",
            test_classic_box_first() == 0 ? "passed" : "failed");
     printf("Classic box 2: %s\n",
            test_classic_box_second() == 0 ? "passed" : "failed");
+    */
+
+    printf("Deer: %s\n",
+           test_deer() == 0 ? "passed" : "failed");
 }
