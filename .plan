@@ -36,6 +36,7 @@ Improvements:
     - Check kd-ks for spec/diffuse
 - Make all pos-neg checks >= EPSILON (grep)
 - Move calculation of some things from *_illum methods to shade (to calc once)
+- Fix dull colors in "box" (refraction)
 
 Further improvements:
 - Improve speed with BVH
