@@ -29,6 +29,8 @@ Add reflection and refraction:
 
 Misc:
 * Add C^2 to post-proc
+- Optimize: set bit flags/checks for zeroeness of material properties:
+    if zero, skip the shading stage
 
 Further improvements:
 - Improve speed with BVH

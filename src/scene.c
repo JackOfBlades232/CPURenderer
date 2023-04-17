@@ -28,6 +28,7 @@ material material_literal(double ka_x, double ka_y, double ka_z,
 material material_zero()
 {
     material m = {0};
+    m.al.x = 1; /* default albedo is 1 0 0 */
     return m;
 }
 
@@ -43,7 +44,7 @@ void destroy_scene(scene *s)
     free(s);
 }
 
-int render(const scene *s, const camera *c, render_mode rmode, image *img)
+int render(const scene *s, const camera *c, render_options ropts, image *img)
 {
     size_t x, y;
     ray r;
@@ -52,13 +53,13 @@ int render(const scene *s, const camera *c, render_mode rmode, image *img)
     for (x = 0; x < img->width; x++)
         for (y = 0; y < img->height; y++) {
             r = get_camera_ray(c, x, y, img);
-            color = trace_ray(r, s, c, 0, rmode);
+            color = trace_ray(r, s, 0, ropts);
 
             // Negating image inversion
             set_img_pixel(img, color, x, img->height-y-1);
         }
 
-    post_process(img, rmode);
+    post_process(img, ropts.mode);
 
     return 1;
 }

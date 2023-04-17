@@ -8,8 +8,6 @@
 #include "render_mode.h"
 #include <math.h>
 
-enum { max_depth = 2 };
-
 typedef struct tag_material {
     vec3d ka, kd, ks, ke;
     double ns, ni;
@@ -47,6 +45,6 @@ material material_zero();
 scene *create_scene();
 void destroy_scene(scene *s);
 
-int render(const scene *s, const camera *c, render_mode rmode, image *img);
+int render(const scene *s, const camera *c, render_options ropts, image *img);
 
 #endif 

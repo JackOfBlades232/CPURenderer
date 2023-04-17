@@ -26,12 +26,11 @@ MATHD_SENTRY	src/mathd.h	/^#define MATHD_SENTRY$/;"	d
 OBJMODULES	Makefile	/^OBJMODULES = $(SRCMODULES:.c=.o)$/;"	m
 PNG_SAVE_SENTRY	src/png_save.h	/^#define PNG_SAVE_SENTRY$/;"	d
 RAYTRACER_SENTRY	src/raytracer.h	/^#define RAYTRACER_SENTRY$/;"	d
-RENDER_MODE_SENTRY	src/render_mode.h	/^#define RENDER_MODE_SENTRY$/;"	d
+RENDER_OPTIONS_SENTRY	src/render_mode.h	/^#define RENDER_OPTIONS_SENTRY$/;"	d
 SCENE_SENTRY	src/scene.h	/^#define SCENE_SENTRY$/;"	d
 SRCMODULES	Makefile	/^SRCMODULES = $(shell find src -type f -name '*.c')$/;"	m
 __anon2aef92bf0103	src/file_reader.c	/^enum {$/;"	g	file:
-__anon8fb34f000103	src/scene.h	/^enum { max_depth = 2 };$/;"	g
-__anon8fb34f00020a	src/scene.h	/^    union {$/;"	u	struct:tag_scene_obj
+__anon8fb34f00010a	src/scene.h	/^    union {$/;"	u	struct:tag_scene_obj
 __anonf184ace00103	src/png_save.c	/^enum { bit_depth = 8 };$/;"	g	file:
 add_light	src/file_reader.c	/^static void add_light(file_read_result *res, light_src light)$/;"	f	typeref:typename:void	file:
 add_material	src/file_reader.c	/^static void add_material(file_read_state *state, file_read_result *res,$/;"	f	typeref:typename:void	file:
@@ -60,7 +59,7 @@ create_read_result	src/file_reader.c	/^static file_read_result *create_read_resu
 create_scene	src/scene.c	/^scene *create_scene()$/;"	f	typeref:typename:scene *
 create_scene_for_read_res	src/file_reader.c	/^scene *create_scene_for_read_res(file_read_result *read_res)$/;"	f	typeref:typename:scene *
 cur_mat	src/file_reader.c	/^    material *cur_mat;$/;"	m	struct:tag_file_read_state	typeref:typename:material *	file:
-data	src/scene.h	/^    } data;$/;"	m	struct:tag_scene_obj	typeref:union:tag_scene_obj::__anon8fb34f00020a
+data	src/scene.h	/^    } data;$/;"	m	struct:tag_scene_obj	typeref:union:tag_scene_obj::__anon8fb34f00010a
 dbl_is_zero	src/mathd.c	/^int dbl_is_zero(double x)$/;"	f	typeref:typename:int
 debug.o	deps.mk	/^debug.o: src\/debug.c src\/debug.h src\/geom.h src\/scene.h src\/camera.h \\$/;"	t
 deg2rad	src/geom.c	/^double deg2rad(double deg)$/;"	f	typeref:typename:double
@@ -125,9 +124,10 @@ material_zero	src/scene.c	/^material material_zero()$/;"	f	typeref:typename:mate
 mathd.o	deps.mk	/^mathd.o: src\/mathd.c src\/mathd.h src\/geom.h$/;"	t
 max	src/mathd.h	/^#define max(/;"	d
 max3	src/mathd.h	/^#define max3(/;"	d
-max_depth	src/scene.h	/^enum { max_depth = 2 };$/;"	e	enum:__anon8fb34f000103
+max_rec_depth	src/render_mode.h	/^    int max_rec_depth;$/;"	m	struct:tag_render_options	typeref:typename:int
 min	src/mathd.h	/^#define min(/;"	d
 min_non_neg	src/mathd.h	/^#define min_non_neg(/;"	d
+mode	src/render_mode.h	/^    render_mode mode;$/;"	m	struct:tag_render_options	typeref:typename:render_mode
 name	src/file_reader.c	/^    char *name;$/;"	m	struct:tag_material_name_pair	typeref:typename:char *	file:
 ni	src/scene.h	/^    double ns, ni;$/;"	m	struct:tag_material	typeref:typename:double
 normal	src/geom.h	/^    vec3d normal;$/;"	m	struct:tag_triangle_obj	typeref:typename:vec3d
@@ -169,15 +169,16 @@ read_mtl_file	src/file_reader.c	/^static int read_mtl_file(const char *path, fil
 read_scene_from_files	src/file_reader.c	/^file_read_result *read_scene_from_files(const char *path)$/;"	f	typeref:typename:file_read_result *
 reflect_illum	src/raytracer.c	/^static vec3d reflect_illum(const scene_obj *obj, const scene *s, $/;"	f	typeref:typename:vec3d	file:
 refract_illum	src/raytracer.c	/^static vec3d refract_illum(const scene_obj *obj, const scene *s, $/;"	f	typeref:typename:vec3d	file:
-render	src/scene.c	/^int render(const scene *s, const camera *c, render_mode rmode, image *img)$/;"	f	typeref:typename:int
+render	src/scene.c	/^int render(const scene *s, const camera *c, render_options ropts, image *img)$/;"	f	typeref:typename:int
 render_mode	src/render_mode.h	/^} render_mode;$/;"	t	typeref:enum:tag_render_mode
+render_options	src/render_mode.h	/^} render_options;$/;"	t	typeref:struct:tag_render_options
 resize_buf_if_necessary	src/file_reader.c	/^static void *resize_buf_if_necessary(void *buf, int *cap,$/;"	f	typeref:typename:void *	file:
 right	src/camera.h	/^    vec3d dir, up, right;$/;"	m	struct:tag_camera	typeref:typename:vec3d
-rmode	test.c	/^static render_mode rmode = rmode_full;$/;"	v	typeref:typename:render_mode	file:
 rmode_depth	src/render_mode.h	/^    rmode_full, rmode_depth, rmode_normal$/;"	e	enum:tag_render_mode
 rmode_full	src/render_mode.h	/^    rmode_full, rmode_depth, rmode_normal$/;"	e	enum:tag_render_mode
 rmode_normal	src/render_mode.h	/^    rmode_full, rmode_depth, rmode_normal$/;"	e	enum:tag_render_mode
-s	src/scene.h	/^        sphere_obj s;$/;"	m	union:tag_scene_obj::__anon8fb34f00020a	typeref:typename:sphere_obj
+ropts	test.c	/^static render_options ropts = { rmode_full, 4 };$/;"	v	typeref:typename:render_options	file:
+s	src/scene.h	/^        sphere_obj s;$/;"	m	union:tag_scene_obj::__anon8fb34f00010a	typeref:typename:sphere_obj
 save_img_to_png	src/png_save.c	/^int save_img_to_png(image *img, const char *path)$/;"	f	typeref:typename:int
 scene	src/scene.h	/^} scene;$/;"	t	typeref:struct:tag_scene
 scene.o	deps.mk	/^scene.o: src\/scene.c src\/scene.h src\/geom.h src\/camera.h src\/image.h \\$/;"	t
@@ -202,6 +203,7 @@ tag_material_name_pair	src/file_reader.c	/^typedef struct tag_material_name_pair
 tag_object_type	src/geom.h	/^typedef enum tag_object_type { sphere, triangle } object_type;$/;"	g
 tag_ray	src/geom.h	/^typedef struct tag_ray {$/;"	s
 tag_render_mode	src/render_mode.h	/^typedef enum tag_render_mode {$/;"	g
+tag_render_options	src/render_mode.h	/^typedef struct tag_render_options {$/;"	s
 tag_scene	src/scene.h	/^typedef struct tag_scene {$/;"	s
 tag_scene_obj	src/scene.h	/^typedef struct tag_scene_obj {$/;"	s
 tag_sphere_obj	src/geom.h	/^typedef struct tag_sphere_obj {$/;"	s
@@ -221,8 +223,8 @@ test_sphere	test.c	/^int test_sphere()$/;"	f	typeref:typename:int
 test_triangle	test.c	/^int test_triangle()$/;"	f	typeref:typename:int
 test_triangle_simple	test.c	/^int test_triangle_simple()$/;"	f	typeref:typename:int
 tone_map	src/image.c	/^static vec3d tone_map(vec3d color, double cutoff)$/;"	f	typeref:typename:vec3d	file:
-tr	src/scene.h	/^        triangle_obj tr;$/;"	m	union:tag_scene_obj::__anon8fb34f00020a	typeref:typename:triangle_obj
-trace_ray	src/raytracer.c	/^vec3d trace_ray(ray r, const scene *s, const camera *c, $/;"	f	typeref:typename:vec3d
+tr	src/scene.h	/^        triangle_obj tr;$/;"	m	union:tag_scene_obj::__anon8fb34f00010a	typeref:typename:triangle_obj
+trace_ray	src/raytracer.c	/^vec3d trace_ray(ray r, const scene *s, int cur_depth, render_options ropts)$/;"	f	typeref:typename:vec3d
 triangle	src/geom.h	/^typedef enum tag_object_type { sphere, triangle } object_type;$/;"	e	enum:tag_object_type
 triangle_from_vertex_infos	src/file_reader.c	/^static scene_obj triangle_from_vertex_infos(vertex_info *v1,$/;"	f	typeref:typename:scene_obj	file:
 triangle_obj	src/geom.h	/^} triangle_obj;$/;"	t	typeref:struct:tag_triangle_obj

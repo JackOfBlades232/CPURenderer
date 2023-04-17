@@ -13,7 +13,7 @@
 
 #include "src/debug.h"
 
-static render_mode rmode = rmode_full;
+static render_options ropts = { rmode_full, 4 };
 
 double random_val()
 {
@@ -80,7 +80,7 @@ int test_sphere()
 
     c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
-    render(&s, &c, rmode, &img);
+    render(&s, &c, ropts, &img);
 
     save_img_to_png(&img, "./test_sphere.png");
     free(s.objects);
@@ -125,7 +125,7 @@ int test_3_spheres()
 
     c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
 
-    render(&s, &c, rmode, &img);
+    render(&s, &c, ropts, &img);
 
     save_img_to_png(&img, "./test_3_spheres.png");
     free(s.objects);
@@ -159,7 +159,7 @@ int test_triangle_simple()
 
     c = camera_from_look_at(0, 2, 0, 0, 0, 0, 90, 1);
 
-    render(&s, &c, rmode, &img);
+    render(&s, &c, ropts, &img);
 
     save_img_to_png(&img, "./test_triangle.png");
     free(s.objects);
@@ -182,7 +182,7 @@ int test_gen_case(const char *obj_path, const char *png_save_path,
 
     alloc_image(&img, res_x, res_y);
 
-    render(s, c, rmode, &img);
+    render(s, c, ropts, &img);
 
     save_img_to_png(&img, png_save_path);
 

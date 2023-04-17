@@ -90,7 +90,10 @@ static vec3d diffuse_illum(const scene_obj *obj, const light_src *l,
     vl = vec3d_normalized(vec3d_sub(l->pos, point));
     scal = max(0, vec3d_dot(vl, normal));
 
-    return vec3d_scale(vec3d_mul(obj->mat->kd, l->illum), scal);
+    return vec3d_scale(
+                vec3d_mul(obj->mat->kd, l->illum), 
+                scal * obj->mat->al.x
+            );
 }
 
 static vec3d specular_illum(const scene_obj *obj, const light_src *l,
@@ -110,24 +113,37 @@ static vec3d specular_illum(const scene_obj *obj, const light_src *l,
 
     return vec3d_scale(
                 vec3d_mul(obj->mat->ks, l->illum), 
-                pow(scal, obj->mat->ns)
+                pow(scal, obj->mat->ns) * obj->mat->al.x
             );
 }
 
 static vec3d reflect_illum(const scene_obj *obj, const scene *s, 
-        vec3d point, vec3d normal, vec3d view_point, int cur_depth)
+                           vec3d point, vec3d normal, vec3d view_point,
+                           int cur_depth, render_options ropts)
 {
-    return vec3d_zero();
+    vec3d ve;
+    ray refl_r;
+
+    ve = vec3d_normalized(vec3d_sub(view_point, point));
+    refl_r.dir = vec3d_reflect(ve, normal);
+    refl_r.orig = vec3d_sum(point, vec3d_scale(refl_r.dir, EPSILON));
+    
+    return vec3d_scale(
+                trace_ray(refl_r, s, cur_depth+1, ropts),
+                obj->mat->al.y
+            );
 }
 
 static vec3d refract_illum(const scene_obj *obj, const scene *s, 
-        vec3d point, vec3d normal, vec3d view_point, int cur_depth)
+                           vec3d point, vec3d normal, vec3d view_point,
+                           int cur_depth, render_options ropts)
 {
     return vec3d_zero();
 }
 
 static vec3d shade(vec3d point, vec3d normal, vec3d view_point,
-        const scene_obj *obj, const scene *s, int cur_depth)
+                   const scene_obj *obj, const scene *s,
+                   int cur_depth, render_options ropts)
 {
     vec3d color;
     int i;
@@ -148,19 +164,18 @@ static vec3d shade(vec3d point, vec3d normal, vec3d view_point,
 
     /* if not reached max recursion depth, collect illumination from refletion
      * and refraction */
-    if (cur_depth < max_depth) {
+    if (cur_depth < ropts.max_rec_depth) {
         color = vec3d_sum3(
             color,
-            reflect_illum(obj, s, point, normal, view_point, cur_depth),
-            refract_illum(obj, s, point, normal, view_point, cur_depth)
+            reflect_illum(obj, s, point, normal, view_point, cur_depth, ropts),
+            refract_illum(obj, s, point, normal, view_point, cur_depth, ropts)
         );
     }
 
     return color;
 }
 
-vec3d trace_ray(ray r, const scene *s, const camera *c, 
-                int cur_depth, render_mode rmode)
+vec3d trace_ray(ray r, const scene *s, int cur_depth, render_options ropts)
 {
     scene_obj *hit_obj;
     vec3d hit_point, hit_normal;
@@ -169,11 +184,12 @@ vec3d trace_ray(ray r, const scene *s, const camera *c,
     hit_obj = find_closest_object(r, s, &hit_point, &dist);
     if (!hit_obj)
         return vec3d_zero();
-    hit_normal = get_normal(hit_point, hit_obj, c->pos);
+    hit_normal = get_normal(hit_point, hit_obj, r.orig);
 
-    switch (rmode) {
+    switch (ropts.mode) {
         case rmode_full:
-            return shade(hit_point, hit_normal, c->pos, hit_obj, s, cur_depth);
+            return shade(hit_point, hit_normal, r.orig,
+                         hit_obj, s, cur_depth, ropts);
         case rmode_depth:
             return vec3d_scale(vec3d_one(), dist);
         case rmode_normal:
