@@ -27,9 +27,8 @@ material material_literal(double ka_x, double ka_y, double ka_z,
 
 material material_zero()
 {
-    material m = {0};
-    m.al.x = 1; /* default albedo is 1 0 0 */
-    return m;
+    return material_literal(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                            0, 0, 1, 0, 0);
 }
 
 scene *create_scene()

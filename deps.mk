@@ -3,7 +3,7 @@ camera.o: src/camera.c src/camera.h src/geom.h src/image.h \
  src/render_mode.h src/mathd.h
 geom.o: src/geom.c src/mathd.h src/geom.h
 file_reader.o: src/file_reader.c src/file_reader.h src/scene.h src/geom.h \
- src/camera.h src/image.h src/render_mode.h
+ src/camera.h src/image.h src/render_mode.h src/debug.h
 raytracer.o: src/raytracer.c src/raytracer.h src/geom.h src/scene.h \
  src/camera.h src/image.h src/render_mode.h src/mathd.h
 scene.o: src/scene.c src/scene.h src/geom.h src/camera.h src/image.h \

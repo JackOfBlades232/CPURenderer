@@ -186,10 +186,10 @@ int test_gen_case(const char *obj_path, const char *png_save_path,
 
     save_img_to_png(&img, png_save_path);
 
+    free_image(&img);
     destroy_scene(s);
     free(fres->mat_buf);
     free(fres);
-    free_image(&img);
     return 0;
 }
 

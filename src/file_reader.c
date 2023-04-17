@@ -166,18 +166,27 @@ static void add_material(file_read_state *state, file_read_result *res,
     if (res->mat_cap != old_cap) {
         state->material_mapping = realloc(state->material_mapping,
                 sizeof(material_name_pair) * res->mat_cap);
+
+        // @HACK: restore pointers after reallocating the material buffer
+        for (int i = 0; i < res->mat_cnt; i++)
+            state->material_mapping[i].mat = res->mat_buf + i;
     }
 
     res->mat_buf[res->mat_cnt] = mat;
 
     pairp = state->material_mapping + res->mat_cnt;
     pairp->mat = res->mat_buf + res->mat_cnt;
-    pairp->name = malloc(sizeof(char) * strlen(mat_name));
-    strcpy(pairp->name, mat_name);
+
+    size_t len = strlen(mat_name);
+    pairp->name = malloc(sizeof(char) * (len+1));
+    strncpy(pairp->name, mat_name, len);
+    pairp->name[len] = '\0';
 
     res->mat_cnt++;
     state->cur_mat = pairp->mat;
 }
+
+#include "debug.h"
 
 static int set_current_material(file_read_state *state, file_read_result *res,
         const char *mat_name)
@@ -271,6 +280,8 @@ static int parse_mtl_line(word_listp w_list, file_read_result *res,
     return status;
 }
 
+#include "debug.h"
+
 static int read_mtl_file(const char *path, file_read_result *res, 
         file_read_state *state)
 {
@@ -293,6 +304,7 @@ static int read_mtl_file(const char *path, file_read_result *res,
 
     state->cur_mat = NULL;
     fclose(mtl_f);
+
     return success;
 }
 
