@@ -54,7 +54,6 @@ center	src/geom.h	/^    vec3d center;$/;"	m	struct:tag_sphere_obj	typeref:typena
 clean	Makefile	/^clean:$/;"	t
 concat_strings	src/file_reader.c	/^static char *concat_strings(const char *s1, const char *s2)$/;"	f	typeref:typename:char *	file:
 content	src/image.h	/^    vec3d *content;$/;"	m	struct:tag_image	typeref:typename:vec3d *
-create_noise_img	test.c	/^int create_noise_img()$/;"	f	typeref:typename:int
 create_read_result	src/file_reader.c	/^static file_read_result *create_read_result()$/;"	f	typeref:typename:file_read_result *	file:
 create_scene	src/scene.c	/^scene *create_scene()$/;"	f	typeref:typename:scene *
 create_scene_for_read_res	src/file_reader.c	/^scene *create_scene_for_read_res(file_read_result *read_res)$/;"	f	typeref:typename:scene *
@@ -161,8 +160,6 @@ print_triangle_info	src/debug.c	/^void print_triangle_info(scene_obj *tr)$/;"	f	
 print_vec	src/debug.c	/^void print_vec(vec3d v)$/;"	f	typeref:typename:void
 process_color	src/image.c	/^static vec3d process_color(vec3d color, render_mode rmode, double img_stat)$/;"	f	typeref:typename:vec3d	file:
 rad	src/geom.h	/^    double rad;$/;"	m	struct:tag_sphere_obj	typeref:typename:double
-random_val	test.c	/^double random_val()$/;"	f	typeref:typename:double
-random_vec	test.c	/^vec3d random_vec()$/;"	f	typeref:typename:vec3d
 ray	src/geom.h	/^} ray;$/;"	t	typeref:struct:tag_ray
 raytracer.o	deps.mk	/^raytracer.o: src\/raytracer.c src\/raytracer.h src\/geom.h src\/scene.h \\$/;"	t
 read_mtl_file	src/file_reader.c	/^static int read_mtl_file(const char *path, file_read_result *res, $/;"	f	typeref:typename:int	file:
@@ -177,7 +174,6 @@ right	src/camera.h	/^    vec3d dir, up, right;$/;"	m	struct:tag_camera	typeref:t
 rmode_depth	src/render_mode.h	/^    rmode_full, rmode_depth, rmode_normal$/;"	e	enum:tag_render_mode
 rmode_full	src/render_mode.h	/^    rmode_full, rmode_depth, rmode_normal$/;"	e	enum:tag_render_mode
 rmode_normal	src/render_mode.h	/^    rmode_full, rmode_depth, rmode_normal$/;"	e	enum:tag_render_mode
-ropts	test.c	/^static render_options ropts = { rmode_full, 4 };$/;"	v	typeref:typename:render_options	file:
 s	src/scene.h	/^        sphere_obj s;$/;"	m	union:tag_scene_obj::__anon8fb34f00010a	typeref:typename:sphere_obj
 save_img_to_png	src/png_save.c	/^int save_img_to_png(image *img, const char *path)$/;"	f	typeref:typename:int
 scene	src/scene.h	/^} scene;$/;"	t	typeref:struct:tag_scene
@@ -187,6 +183,7 @@ set_current_material	src/file_reader.c	/^static int set_current_material(file_re
 set_img_pixel	src/image.c	/^void set_img_pixel(image *img, vec3d color, size_t x, size_t y)$/;"	f	typeref:typename:void
 set_row_data	src/png_save.c	/^static void set_row_data(image *img, png_structp png_ptr,$/;"	f	typeref:typename:void	file:
 shade	src/raytracer.c	/^static vec3d shade(vec3d point, vec3d normal, vec3d view_point,$/;"	f	typeref:typename:vec3d	file:
+sign	src/mathd.h	/^#define sign(/;"	d
 solve_qe	src/mathd.c	/^int solve_qe(double a, double b, double c, double *r1, double *r2)$/;"	f	typeref:typename:int
 specular_illum	src/raytracer.c	/^static vec3d specular_illum(const scene_obj *obj, const light_src *l,$/;"	f	typeref:typename:vec3d	file:
 sphere	src/geom.h	/^typedef enum tag_object_type { sphere, triangle } object_type;$/;"	e	enum:tag_object_type
@@ -211,19 +208,18 @@ tag_triangle_obj	src/geom.h	/^typedef struct tag_triangle_obj {$/;"	s
 tag_vec3d	src/geom.h	/^typedef struct tag_vec3d {$/;"	s
 tag_vertex_info	src/file_reader.c	/^typedef struct tag_vertex_info {$/;"	s	file:
 test	Makefile	/^test: test.c $(OBJMODULES)$/;"	t
-test_3_spheres	test.c	/^int test_3_spheres()$/;"	f	typeref:typename:int
 test_box	test.c	/^int test_box()$/;"	f	typeref:typename:int
-test_camera_tracing	test.c	/^void test_camera_tracing()$/;"	f	typeref:typename:void
 test_classic_box_first	test.c	/^int test_classic_box_first()$/;"	f	typeref:typename:int
 test_classic_box_second	test.c	/^int test_classic_box_second()$/;"	f	typeref:typename:int
 test_deer	test.c	/^int test_deer()$/;"	f	typeref:typename:int
+test_distorted_box	test.c	/^int test_distorted_box()$/;"	f	typeref:typename:int
 test_gen_case	test.c	/^int test_gen_case(const char *obj_path, const char *png_save_path,$/;"	f	typeref:typename:int
+test_mirrors	test.c	/^int test_mirrors()$/;"	f	typeref:typename:int
 test_shading_parts	test.c	/^int test_shading_parts()$/;"	f	typeref:typename:int
-test_sphere	test.c	/^int test_sphere()$/;"	f	typeref:typename:int
 test_triangle	test.c	/^int test_triangle()$/;"	f	typeref:typename:int
-test_triangle_simple	test.c	/^int test_triangle_simple()$/;"	f	typeref:typename:int
 tone_map	src/image.c	/^static vec3d tone_map(vec3d color, double cutoff)$/;"	f	typeref:typename:vec3d	file:
 tr	src/scene.h	/^        triangle_obj tr;$/;"	m	union:tag_scene_obj::__anon8fb34f00010a	typeref:typename:triangle_obj
+tr	src/scene.h	/^    double tr;$/;"	m	struct:tag_material	typeref:typename:double
 trace_ray	src/raytracer.c	/^vec3d trace_ray(ray r, const scene *s, int cur_depth, render_options ropts)$/;"	f	typeref:typename:vec3d
 triangle	src/geom.h	/^typedef enum tag_object_type { sphere, triangle } object_type;$/;"	e	enum:tag_object_type
 triangle_from_vertex_infos	src/file_reader.c	/^static scene_obj triangle_from_vertex_infos(vertex_info *v1,$/;"	f	typeref:typename:scene_obj	file:

@@ -11,6 +11,7 @@
 typedef struct tag_material {
     vec3d ka, kd, ks, ke;
     double ns, ni;
+    double tr;
     vec3d al;
 } material;
 
@@ -38,8 +39,9 @@ material material_literal(double ka_x, double ka_y, double ka_z,
                           double ke_x, double ke_y, double ke_z,
                           double kd_x, double kd_y, double kd_z,
                           double ks_x, double ks_y, double ks_z,
-                          double ns, double ni,
+                          double ns, double ni, double tr,
                           double al_x, double al_y, double al_z);
+
 material material_zero();
 
 scene *create_scene();

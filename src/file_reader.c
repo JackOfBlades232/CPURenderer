@@ -274,13 +274,19 @@ static int parse_mtl_line(word_listp w_list, file_read_result *res,
         status = try_read_double(w_list, &state->cur_mat->ni);
     else if (strcmp(tok, "al") == 0)
         status = try_read_vec3d(w_list, &state->cur_mat->al);
+    else if (strcmp(tok, "Tr") == 0)
+        status = try_read_double(w_list, &state->cur_mat->tr);
+    else if (strcmp(tok, "d") == 0) { /* density is 1 - transparency */
+        double d;
+        status = try_read_double(w_list, &d);
+        if (status)
+            state->cur_mat->tr = 1. - d;
+    }
 
     word_free(w);
 
     return status;
 }
-
-#include "debug.h"
 
 static int read_mtl_file(const char *path, file_read_result *res, 
         file_read_state *state)

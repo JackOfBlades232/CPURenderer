@@ -22,17 +22,21 @@ Add vertex normals to triangles (and obj parsing):
     Coords are already calculated in intersection algo
 
 Add reflection and refraction:
-- Study the formulas
-- Make some global rec depth param in test.c
-- Impl reflection
-- Impl refraction and run all tests
+* Study the formulas
+* Make some global rec depth param in test.c
+* Impl reflection
+* Impl refraction and run all tests
 
-Misc:
+Improvements:
 * Add C^2 to post-proc
+* Offset ray orig by epsilon before every from-obj casting
+* Add separate render opts for all test cases
 - Optimize: set bit flags/checks for zeroeness of material properties:
-    if zero, skip the shading stage
+    * Check al values
+    - Check kd-ks for spec/diffuse
+- Make all pos-neg checks >= EPSILON (grep)
+- Move calculation of some things from *_illum methods to shade (to calc once)
 
 Further improvements:
 - Improve speed with BVH
-- Impl auto testing for png results (pix comp) and test case creation
 - Uncomment vt reading and implement texturing

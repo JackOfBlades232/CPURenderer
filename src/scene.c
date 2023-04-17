@@ -11,7 +11,7 @@ material material_literal(double ka_x, double ka_y, double ka_z,
                           double ke_x, double ke_y, double ke_z,
                           double kd_x, double kd_y, double kd_z,
                           double ks_x, double ks_y, double ks_z,
-                          double ns, double ni,
+                          double ns, double ni, double tr,
                           double al_x, double al_y, double al_z)
 {
     material m;
@@ -21,6 +21,7 @@ material material_literal(double ka_x, double ka_y, double ka_z,
     m.ks = vec3d_literal(ks_x, ks_y, ks_z);
     m.ns = ns;
     m.ni = ni;
+    m.tr = tr;
     m.al = vec3d_literal(al_x, al_y, al_z);
     return m;
 }
@@ -28,7 +29,7 @@ material material_literal(double ka_x, double ka_y, double ka_z,
 material material_zero()
 {
     return material_literal(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 1, 0, 0);
+                            0, 0, 0, 1, 0, 0);
 }
 
 scene *create_scene()
@@ -52,7 +53,7 @@ int render(const scene *s, const camera *c, render_options ropts, image *img)
     for (x = 0; x < img->width; x++)
         for (y = 0; y < img->height; y++) {
             r = get_camera_ray(c, x, y, img);
-            color = trace_ray(r, s, 0, ropts);
+            color = trace_ray(r, s, 1, ropts);
 
             // Negating image inversion
             set_img_pixel(img, color, x, img->height-y-1);
