@@ -31,8 +31,8 @@ static vec3d tone_map(vec3d color, double cutoff)
     return vec3d_div(
             vec3d_mul(color,
                 vec3d_sum(vec3d_one(), vec3d_scale(color, cutoff))), 
-                vec3d_sum(color, vec3d_one())
-                );
+            vec3d_sum(color, vec3d_one())
+            );
 }
 
 static vec3d gamma_correct(vec3d color)

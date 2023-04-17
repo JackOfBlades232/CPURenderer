@@ -19,11 +19,5 @@ endif
 deps.mk: $(SRCMODULES)
 	$(CC) -MM $^ > $@
 
-tags: test.c $(SRCMODULES) $(SRCMODULES:.c=.h) 
-	ctags *.c src/*.c src/*.h
-
 clean:
 	rm -f *.o src/*.o test prog
-
-cl_meta:
-	rm -f deps.mk tags

@@ -175,8 +175,8 @@ static vec3d calculate_triangle_normal(const triangle_obj *tr)
 }
 
 triangle_obj trianlge_literal(double x1, double y1, double z1,
-                             double x2, double y2, double z2,
-                             double x3, double y3, double z3)
+                              double x2, double y2, double z2,
+                              double x3, double y3, double z3)
 {
     triangle_obj tr;
     tr.v1 = vec3d_literal(x1, y1, z1);
@@ -244,7 +244,8 @@ int intersect_with_triangle(ray r, triangle_obj *tr, vec3d *out, double *dist)
     if (t > EPSILON) {
         *dist = t;
         *out = vec3d_sum(r.orig, vec3d_scale(r.dir, t));
-        tr->last_hit_barycentric = vec3d_literal(1.0-u-v, u, v);
+        if (tr->has_vn)
+            tr->last_hit_barycentric = vec3d_literal(1.0-u-v, u, v);
         return 1;
     } else
         return 0;
