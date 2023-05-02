@@ -175,7 +175,7 @@ static vec3d refract_illum(const scene_obj *obj, const scene *s,
     double refr_sin_coord = -sin_coeff * vec3d_len(vec3d_cross(normal, ve));
 
     // if not -1 <= sine <= 0, (asb sine > 1 or < 0), consider refr failed
-    if (refr_sin_coord > EPSILON || refr_sin_coord < -1. + EPSILON)
+    if (refr_sin_coord > -EPSILON || refr_sin_coord < -1. + EPSILON)
         return vec3d_zero();
 
     double refr_cos_coord = 

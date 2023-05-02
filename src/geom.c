@@ -241,7 +241,7 @@ int intersect_with_triangle(ray r, triangle_obj *tr, vec3d *out, double *dist)
         return 0;
 
     t = f * vec3d_dot(edge2, q);
-    if (t > EPSILON) {
+    if (t >= EPSILON) {
         *dist = t;
         *out = vec3d_sum(r.orig, vec3d_scale(r.dir, t));
         if (tr->has_vn)
