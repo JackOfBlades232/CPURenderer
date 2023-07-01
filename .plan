@@ -31,12 +31,8 @@ Improvements:
 * Add C^2 to post-proc
 * Offset ray orig by epsilon before every from-obj casting
 * Add separate render opts for all test cases
-- Optimize: set bit flags/checks for zeroeness of material properties:
-    * Check al values
-    - Check kd-ks for spec/diffuse
-- Make all pos-neg checks >= EPSILON (grep)
-- Move calculation of some things from *_illum methods to shade (to calc once)
-- Fix dull colors in "box" (refraction)
+* Make all pos-neg checks >= EPSILON (grep)
+* Fix dull colors in refraction (all colors are somehow toned down)
 
 Further improvements:
 - Improve speed with BVH

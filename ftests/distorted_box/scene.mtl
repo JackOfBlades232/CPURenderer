@@ -84,7 +84,8 @@ newmtl frontWall1
   al 0 0 1
   Ns 1024
   Ni 1.8
-  d 0.2
+  #d 0.2
+  d 0
 
 newmtl frontWall2
   illum 7
@@ -92,5 +93,6 @@ newmtl frontWall2
   al 0 0 1
   Ns 1024
   Ni 1.3
-  d 0.5
+  #d 0.5
+  d 0
 

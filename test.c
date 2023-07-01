@@ -103,6 +103,7 @@ int test_deer()
 int main()
 {
     /*
+    */
     printf("Shading parts: %s\n",
             test_shading_parts() == 0 ? "passed" : "failed");
     printf("Triangle: %s\n",
@@ -115,14 +116,13 @@ int main()
 
     printf("Distorted box: %s\n",
             test_distorted_box() == 0 ? "passed" : "failed");
-            */
     
     printf("Box: %s\n", test_box() == 0 ? "passed" : "failed");
 
-    /*
     printf("Mirrors: %s\n", test_mirrors() == 0 ? "passed" : "failed");
 
     printf("Deer: %s\n",
             test_deer() == 0 ? "passed" : "failed");
-            */
+    /*
+    */
 }

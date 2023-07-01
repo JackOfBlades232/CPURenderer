@@ -27,7 +27,8 @@ newmtl rightSphere
     al 0.0 0.3 0.7
     Ns 1024
     Ni 1.8
-    d 0.5
+    d 0
+    #d 0.5
     illum 7
    
 newmtl floor
@@ -88,4 +89,3 @@ newmtl light
 	Kd 0.7800 0.7800 0.7800
     Ke 1 1 1
 	Ks 0 0 0
-

@@ -138,7 +138,7 @@ static vec3d refract_illum(const scene_obj *obj, const scene *s,
                            vec3d point, vec3d normal, vec3d view_point,
                            int cur_depth, render_options ropts)
 {
-    if (dbl_is_zero(obj->mat->al.z) || obj->mat->ni < EPSILON)
+    if (obj->mat->ni < EPSILON)
         return vec3d_zero();
 
     vec3d ve = vec3d_normalized(vec3d_sub(view_point, point));
@@ -149,13 +149,20 @@ static vec3d refract_illum(const scene_obj *obj, const scene *s,
 
     int we_are_outside_obj = view_cos >= EPSILON;
 
-    double sin_coeff, tr;
+    double sin_coeff, al2, tr;
     if (we_are_outside_obj) {
         tr = obj->mat->tr;
+        al2 = obj->mat->al.z;
+
+        // @HACK so as not to make unnecessary calculations
+        if (dbl_is_zero(tr) || dbl_is_zero(al2))
+            return vec3d_zero();
+
         // @SPEED: we could bake 1/ni in material
         sin_coeff = 1.0 / obj->mat->ni;
     } else {
         tr = 1.;
+        al2 = 1.;
         sin_coeff = obj->mat->ni;
     }
 
@@ -190,11 +197,10 @@ static vec3d refract_illum(const scene_obj *obj, const scene *s,
             vec3d_scale(tangent, refr_sin_coord)
             );
 
-
     // multipliers: albedo_2 and transparency
     return vec3d_scale(
             trace_ray(refr_r, s, cur_depth+1, ropts), 
-            tr * obj->mat->al.z
+            tr * al2
             );
 }
 
@@ -209,7 +215,6 @@ static vec3d shade(vec3d point, vec3d normal, vec3d view_point,
 
     /* diffuse and specular over all lights */
     if (!dbl_is_zero(obj->mat->al.x)) {
-        // @TODO: if kd == 0, dont calc diffuse, if ks == 0, no spec
         for (i = 0; i < s->lights_cnt; i++) {
             light_src *l = s->lights + i;
             if (light_is_seen(point, l, s)) {
