@@ -25,6 +25,10 @@ typedef struct tag_triangle_obj {
     int has_vn;
 } triangle_obj;
 
+typedef struct tag_bounds {
+    vec3d min, max;
+} bounds;
+
 double deg2rad(double deg);
 
 vec3d vec3d_literal(double x, double y, double z);
@@ -51,13 +55,17 @@ vec3d vec3d_reflect(vec3d v, vec3d normal);
 sphere_obj sphere_literal(double cx, double cy, double cz, double r);
 vec3d get_sphere_normal(vec3d point, const sphere_obj *s);
 int intersect_with_sphere(ray r, const sphere_obj *s, 
-        vec3d *out, double *dist);
+                          vec3d *out, double *dist);
+bounds get_sphere_bounds(const sphere_obj *s);
+vec3d get_sphere_centroid(const sphere_obj *s);
             
 triangle_obj trianlge_literal(double x1, double y1, double z1,
-                             double x2, double y2, double z2,
-                             double x3, double y3, double z3);
+                              double x2, double y2, double z2,
+                              double x3, double y3, double z3);
 vec3d get_triangle_normal(vec3d point, const triangle_obj *tr, 
-        vec3d view_point);
+                          vec3d view_point);
 int intersect_with_triangle(ray r, triangle_obj *tr, vec3d *out, double *dist);
+bounds get_triangle_bounds(const triangle_obj *tr);
+vec3d get_triangle_centroid(const triangle_obj *tr);
 
 #endif 

@@ -4,7 +4,7 @@
 
 #include "geom.h"
 #include "scene.h"
-#include "render_mode.h"
+#include "render_options.h"
 
 vec3d trace_ray(ray r, const scene *s, int cur_depth, render_options ropts);
 

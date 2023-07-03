@@ -9,6 +9,7 @@
 #define max(a, b) (a > b ? a : b)
 #define max3(a, b, c) (max(a, max(b, c)))
 #define min(a, b) (a < b ? a : b)
+#define min3(a, b, c) (min(a, min(b, c)))
 #define min_non_neg(a, b) ((a < 0 || b < 0) ? max(a, b) : min(a, b))
 #define sign(a) (a >= EPSILON ? 1 : (a =< -EPSILON ? -1 : 0))
 

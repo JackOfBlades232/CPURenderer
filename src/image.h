@@ -3,7 +3,7 @@
 #define IMAGE_SENTRY
 
 #include "geom.h"
-#include "render_mode.h"
+#include "render_options.h"
 #include <stddef.h>
 
 typedef struct tag_image {

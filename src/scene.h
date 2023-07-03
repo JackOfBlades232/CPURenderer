@@ -5,7 +5,7 @@
 #include "geom.h"
 #include "camera.h"
 #include "image.h"
-#include "render_mode.h"
+#include "render_options.h"
 #include <math.h>
 
 typedef struct tag_material {
@@ -29,10 +29,17 @@ typedef struct tag_scene_obj {
     } data;
 } scene_obj;
 
+typedef struct tag_bvh_tree_node {
+    struct tag_bvh_tree_node *l, *r;
+    bounds b;
+    size_t first_prim_offset, prims_cnt;
+} bvh_tree_node;
+
 typedef struct tag_scene {
     light_src *lights;
     scene_obj *objects;
     size_t lights_cnt, objects_cnt;
+    bvh_tree_node *bvh_root;
 } scene;
 
 material material_literal(double ka_x, double ka_y, double ka_z,

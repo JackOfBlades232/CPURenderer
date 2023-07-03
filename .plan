@@ -37,3 +37,4 @@ Improvements:
 Further improvements:
 - Improve speed with BVH
 - Uncomment vt reading and implement texturing
+- Go over not implemented features (@ in code)

@@ -27,7 +27,7 @@ static vec3d get_normal(vec3d point, const scene_obj *obj, vec3d view_point)
             return get_triangle_normal(point, &(obj->data.tr), view_point);
     }
 
-    return vec3d_literal(0, 0, 0);
+    return vec3d_zero();
 }
 
 static scene_obj *find_closest_object(ray r, const scene *s,

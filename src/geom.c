@@ -164,6 +164,23 @@ int intersect_with_sphere(ray r, const sphere_obj *s, vec3d *out, double *dist)
     return 0;
 }
 
+bounds get_sphere_bounds(const sphere_obj *s)
+{
+    bounds b;
+    b.min = vec3d_literal(s->center.x - s->rad,
+                          s->center.y - s->rad,
+                          s->center.z - s->rad);
+    b.max = vec3d_literal(s->center.x + s->rad,
+                          s->center.y + s->rad,
+                          s->center.z + s->rad);
+    return b;
+}
+
+vec3d get_sphere_centroid(const sphere_obj *s)
+{
+    return s->center;
+}
+
 static vec3d calculate_triangle_normal(const triangle_obj *tr)
 {
     return vec3d_normalized(
@@ -249,4 +266,21 @@ int intersect_with_triangle(ray r, triangle_obj *tr, vec3d *out, double *dist)
         return 1;
     } else
         return 0;
+}
+
+bounds get_triangle_bounds(const triangle_obj *tr)
+{
+    bounds b;
+    b.min = vec3d_literal(min3(tr->v1.x, tr->v2.x, tr->v3.x),
+                          min3(tr->v1.y, tr->v2.y, tr->v3.y),
+                          min3(tr->v1.z, tr->v2.z, tr->v3.z));
+    b.max = vec3d_literal(max3(tr->v1.x, tr->v2.x, tr->v3.x),
+                          max3(tr->v1.y, tr->v2.y, tr->v3.y),
+                          max3(tr->v1.z, tr->v2.z, tr->v3.z));
+    return b;
+}
+
+vec3d get_triangle_centroid(const triangle_obj *tr)
+{
+    return vec3d_scale(vec3d_sum3(tr->v1, tr->v2, tr->v3), 1./3.);
 }

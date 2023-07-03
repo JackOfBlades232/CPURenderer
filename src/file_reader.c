@@ -2,6 +2,7 @@
 #include "file_reader.h"
 #include "geom.h"
 #include "scene.h"
+#include "bvh_funcs.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -608,12 +609,16 @@ read_error:
     return NULL;
 }
 
-scene *create_scene_for_read_res(file_read_result *read_res)
+scene *create_scene_for_read_res(file_read_result *read_res,
+                                 render_options ropts)
 {
     scene *s = create_scene();
     s->objects = read_res->obj_buf;
     s->objects_cnt = read_res->obj_cnt;
     s->lights = read_res->light_buf;
     s->lights_cnt = read_res->light_cnt;
+
+    construct_scene_bvh_tree(s, ropts.bvh_opts);
+
     return s;
 }

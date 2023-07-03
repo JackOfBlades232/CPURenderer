@@ -3,6 +3,7 @@
 #define FILE_READER_SENTRY
 
 #include "scene.h"
+#include "render_options.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,6 +18,7 @@ typedef struct tag_file_read_result {
 } file_read_result;
 
 file_read_result *read_scene_from_files(const char *path);
-scene *create_scene_for_read_res(file_read_result *read_res);
+scene *create_scene_for_read_res(file_read_result *read_res,
+                                 render_options ropts);
 
 #endif
