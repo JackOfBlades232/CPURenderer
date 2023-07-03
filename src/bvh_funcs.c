@@ -16,6 +16,7 @@ typedef struct tag_object_info {
 typedef struct tag_bucket {
     bounds b;
     size_t obj_cnt;
+    double upper_bound;
 } bucket;
 
 static bounds get_bounds(const scene_obj *obj)
@@ -84,11 +85,25 @@ static size_t partition_by_sah(object_info *obj_infos,
     double spread = bounds_dim_spread(cb, dim);
     double bucket_size = spread / opts.num_buckets;
 
+    for (int i = 0; i < sizeof(buckets); i++) {
+        buckets[i].obj_cnt = 0;
+        buckets[i].upper_bound = bucket_size * (i+1);
+    }
+
     int bucket_idx = 0;
     for (size_t i = start; i < end; i++) {
         object_info info = obj_infos[i];
-        // @INCOMPLETE
+        double c_dim = vec3d_get_dim(info.c, dim);
+
+        while (c_dim >= buckets[bucket_idx].upper_bound + EPSILON)
+            bucket_idx++;
+
+        buckets[bucket_idx].b = bounds_union(buckets[bucket_idx].b, info.b);
+        buckets[bucket_idx].obj_cnt++;
     }
+
+    // @TODO: go over all partitions, calc SAH (need surface area), 
+    // then do value partition against best
 
     return 0;
 }

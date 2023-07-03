@@ -15,7 +15,7 @@ typedef struct tag_bvh_options {
     bvh_split_mode split_mode;
     int num_buckets;
     int max_objs_in_leaf;
-    double part_cost, leaf_cost;
+    double part_cost, inter_cost;
 } bvh_options;
 
 typedef struct tag_render_options {
