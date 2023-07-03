@@ -16,5 +16,6 @@
 void swap_dbl(double *a, double *b);
 int solve_qe(double a, double b, double c, double *r1, double *r2);
 int dbl_is_zero(double x);
+int dbls_are_eq(double x, double y);
 
 #endif 

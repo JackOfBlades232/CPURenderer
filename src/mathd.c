@@ -36,3 +36,8 @@ int dbl_is_zero(double x)
 {
     return x > -EPSILON && x < EPSILON;
 }
+
+int dbls_are_eq(double x, double y)
+{
+    return dbl_is_zero(x-y);
+}

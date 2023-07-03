@@ -32,7 +32,7 @@ typedef struct tag_scene_obj {
 typedef struct tag_bvh_tree_node {
     struct tag_bvh_tree_node *l, *r;
     bounds b;
-    size_t first_prim_offset, prims_cnt;
+    size_t first_obj_offset, obj_cnt;
 } bvh_tree_node;
 
 typedef struct tag_scene {

@@ -2,6 +2,8 @@
 #ifndef GEOM_SENTRY
 #define GEOM_SENTRY
 
+typedef enum tag_dim3d { x, y, z } dim3d;
+
 typedef enum tag_object_type { sphere, triangle } object_type;
 
 typedef struct tag_vec3d {
@@ -50,7 +52,16 @@ double vec3d_len(vec3d v);
 vec3d vec3d_mul(vec3d v1, vec3d v2);
 vec3d vec3d_div(vec3d v1, vec3d v2);
 
+int vec3d_dim_comp(vec3d v1, vec3d v2, dim3d dim);
+
 vec3d vec3d_reflect(vec3d v, vec3d normal);
+
+bounds bounds_from_point(vec3d point);
+bounds bounds_union(bounds b1, bounds b2);
+bounds bounds_add_point(bounds b, vec3d point);
+dim3d bounds_max_dim(bounds b);
+double bounds_dim_spread(bounds b, dim3d dim);
+vec3d bounds_center(bounds b);
 
 sphere_obj sphere_literal(double cx, double cy, double cz, double r);
 vec3d get_sphere_normal(vec3d point, const sphere_obj *s);

@@ -111,11 +111,74 @@ vec3d vec3d_div(vec3d v1, vec3d v2)
     return vec3d_literal(v1.x/v2.x, v1.y/v2.y, v1.z/v2.z);
 }
 
+int vec3d_dim_comp(vec3d v1, vec3d v2, dim3d dim)
+{
+    switch (dim) {
+        case x:
+            return dbls_are_eq(v1.x, v2.x) ? 0 : (v1.x < v2.x ? 1 : -1);
+        case y:
+            return dbls_are_eq(v1.y, v2.y) ? 0 : (v1.y < v2.y ? 1 : -1);
+        case z:
+            return dbls_are_eq(v1.z, v2.z) ? 0 : (v1.z < v2.y ? 1 : -1);
+    }
+}
+
 vec3d vec3d_reflect(vec3d v, vec3d normal)
 {
     double n_v;
     n_v = vec3d_dot(v, normal);
     return vec3d_sub(vec3d_scale(normal, 2.0*n_v), v);
+}
+
+bounds bounds_from_point(vec3d point)
+{
+    bounds b;
+    b.min = point;
+    b.max = point;
+    return b;
+}
+    
+bounds bounds_union(bounds b1, bounds b2)
+{
+    bounds b;
+    b.min = vec3d_literal(min(b1.min.x, b2.min.x),
+                          min(b1.min.y, b2.min.y),
+                          min(b1.min.z, b2.min.z));
+    b.max = vec3d_literal(max(b1.max.x, b2.max.x),
+                          max(b1.max.y, b2.max.y),
+                          max(b1.max.z, b2.max.z));
+    return b;
+}
+
+bounds bounds_add_point(bounds b, vec3d point)
+{
+    return bounds_union(b, bounds_from_point(point));
+}
+
+dim3d bounds_max_dim(bounds b)
+{
+    int xdim = b.max.x - b.min.x,
+        ydim = b.max.y - b.min.y,
+        zdim = b.max.z - b.min.z;
+    return (xdim >= ydim && xdim >= zdim) ? x :
+           ydim >= zdim ? y : z;
+}
+
+double bounds_dim_spread(bounds b, dim3d dim)
+{
+    switch (dim) {
+        case x:
+            return b.max.x - b.min.x;
+        case y:
+            return b.max.y - b.min.y;
+        case z:
+            return b.max.z - b.min.z;
+    }
+}
+
+vec3d bounds_center(bounds b)
+{
+    return vec3d_scale(vec3d_sum(b.min, b.max), 0.5);
 }
 
 sphere_obj sphere_literal(double cx, double cy, double cz, double r)
