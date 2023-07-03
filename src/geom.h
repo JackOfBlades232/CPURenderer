@@ -63,6 +63,8 @@ dim3d bounds_max_dim(bounds b);
 double bounds_dim_spread(bounds b, dim3d dim);
 vec3d bounds_center(bounds b);
 
+int intersect_with_bounds(ray r, bounds b, double *dist);
+
 sphere_obj sphere_literal(double cx, double cy, double cz, double r);
 vec3d get_sphere_normal(vec3d point, const sphere_obj *s);
 int intersect_with_sphere(ray r, const sphere_obj *s, 

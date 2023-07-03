@@ -37,8 +37,9 @@ static vec3d get_centroid(const scene_obj *obj)
     return vec3d_zero();
 }
 
-size_t partition_by_middle(object_info *obj_infos, size_t start, size_t end,
-                           bounds cb, dim3d dim)
+static size_t partition_by_middle(object_info *obj_infos, 
+                                  size_t start, size_t end,
+                                  bounds cb, dim3d dim)
 {
     if (start >= end+1)
         return start;
@@ -80,11 +81,11 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
     for (size_t i = start+1; i < end; i++)
         node->b = bounds_union(node->b, obj_infos[i].b);
 
+    /*
     printf("\nNum objects: %ld\n", end-start);
     printf("------------------------------\nBounds:\n");
     print_vec(node->b.min);
     print_vec(node->b.max);
-    /*
     */
 
     if (end == start+1) {
@@ -101,9 +102,11 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
     for (size_t i = start+1; i < end; i++)
         cb = bounds_add_point(cb, obj_infos[i].c);
 
+    /*
     printf("\n------------------------------\nCentroid bounds:\n");
     print_vec(cb.min);
     print_vec(cb.max);
+    */
 
     dim3d split_dim = bounds_max_dim(cb);
     double c_spread = bounds_dim_spread(cb, split_dim);
@@ -132,7 +135,7 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
             break;
     }
 
-    printf("Kidz:\n");
+    //printf("Kidz:\n");
     node->l = recursive_bvh(obj_infos, start, mid,
                             ordered_objects, ordered_write_idx, objects, opts);
     node->r = recursive_bvh(obj_infos, mid, end,

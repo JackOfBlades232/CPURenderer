@@ -121,6 +121,8 @@ int vec3d_dim_comp(vec3d v1, vec3d v2, dim3d dim)
         case z:
             return dbls_are_eq(v1.z, v2.z) ? 0 : (v1.z < v2.y ? 1 : -1);
     }
+
+    return 0;
 }
 
 vec3d vec3d_reflect(vec3d v, vec3d normal)
@@ -174,11 +176,47 @@ double bounds_dim_spread(bounds b, dim3d dim)
         case z:
             return b.max.z - b.min.z;
     }
+
+    return 0.;
 }
 
 vec3d bounds_center(bounds b)
 {
     return vec3d_scale(vec3d_sum(b.min, b.max), 0.5);
+}
+
+int intersect_with_bounds(ray r, bounds b, double *dist)
+{
+    // Calculate the intersection t-s for all axis-aligned planes
+    double tx1, tx2, ty1, ty2, tz1, tz2;
+    tx1 = (b.min.x - r.orig.x) / r.dir.x;
+    tx2 = (b.max.x - r.orig.x) / r.dir.x;
+    if (tx1 > tx2)
+        swap_dbl(&tx1, &tx2);
+    ty1 = (b.min.y - r.orig.y) / r.dir.y;
+    ty2 = (b.max.y - r.orig.y) / r.dir.y;
+    if (ty1 > ty2)
+        swap_dbl(&ty1, &ty2);
+    tz1 = (b.min.z - r.orig.z) / r.dir.z;
+    tz2 = (b.max.z - r.orig.z) / r.dir.z;
+    if (tz1 > tz2)
+        swap_dbl(&tz1, &tz2);
+
+    // Calculate the boundaries of the intersection of the three intervals
+    double int_min_t = max3(tx1, ty1, tz1);
+    double int_max_t = min3(tx2, ty2, tz2);
+
+    // The ray's line does not intersect the innerds of the bounds
+    // Or the box is intersected by the other side of the line
+    if (int_min_t > int_max_t || int_max_t < EPSILON)
+        return 0;
+
+    // If inside box, consider distance equal to 0
+    if (int_min_t < 0)
+        int_min_t = 0;
+
+    *dist = int_min_t;
+    return 1;
 }
 
 sphere_obj sphere_literal(double cx, double cy, double cz, double r)

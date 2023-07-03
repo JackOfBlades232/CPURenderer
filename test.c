@@ -70,7 +70,6 @@ int test_classic_box_second()
 
 int test_box()
 {
-    //render_options ropts = { rmode_full, 4, { 1, bvhs_middle } };
     render_options ropts = { rmode_full, 4, { 1, bvhs_middle } };
 
     camera c = camera_from_look_at(0, 0.7, 1.75, 0, 0.7, 0, 60, 1);
@@ -80,7 +79,6 @@ int test_box()
 
 int test_distorted_box()
 {
-    //render_options ropts = { rmode_full, 4, { 1, bvhs_middle } };
     render_options ropts = { rmode_full, 4, { 1, bvhs_middle } };
 
     camera c = camera_from_look_at(-0.5, 1.5, 1.98, 0, 1, 0, 90, 1);
@@ -107,6 +105,7 @@ int test_deer()
 int main()
 {
     /*
+    */
     printf("Shading parts: %s\n",
             test_shading_parts() == 0 ? "passed" : "failed");
     printf("Triangle: %s\n",
@@ -119,14 +118,13 @@ int main()
 
     printf("Distorted box: %s\n",
             test_distorted_box() == 0 ? "passed" : "failed");
-            */
     
     printf("Box: %s\n", test_box() == 0 ? "passed" : "failed");
-    /*
 
     printf("Mirrors: %s\n", test_mirrors() == 0 ? "passed" : "failed");
 
     printf("Deer: %s\n",
             test_deer() == 0 ? "passed" : "failed");
+    /*
     */
 }

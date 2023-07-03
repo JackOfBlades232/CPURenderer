@@ -30,24 +30,80 @@ static vec3d get_normal(vec3d point, const scene_obj *obj, vec3d view_point)
     return vec3d_zero();
 }
 
-static scene_obj *find_closest_object(ray r, const scene *s,
-                                      vec3d *pos_out, double *dist)
+static scene_obj *find_closest_object_bvh(ray r, const scene *s,
+                                          bvh_tree_node *node,
+                                          double *dist, scene_obj *closest)
 {
-    scene_obj *obj_p, *closest;
-    double cur_dist;
-    vec3d pos;
+    double box_dist;
 
-    closest = NULL;
+    int box_int_res = intersect_with_bounds(r, node->b, &box_dist);
+    if (!box_int_res || *dist <= box_dist)
+        return closest;
+
+    if (node->l == NULL && node->r == NULL) {
+        scene_obj *first_objp = s->objects + node->first_obj_offset;
+        double cur_dist;
+        vec3d pos;
+        for (size_t i = 0; i < node->obj_cnt; i++) {
+            scene_obj *obj_p = first_objp + i;
+            if (!intersect_ray(r, obj_p, &pos, &cur_dist))
+                continue;
+
+            if (cur_dist < *dist) {
+                *dist = cur_dist;
+                closest = obj_p;
+            }
+        }
+    } else {
+        double d1, d2;
+        int ir1 = intersect_with_bounds(r, node->l->b, &d1);
+        int ir2 = intersect_with_bounds(r, node->r->b, &d2);
+
+        bvh_tree_node *first = NULL;
+        bvh_tree_node *second = NULL;
+        if (ir1 && ir2) {
+            first = d1 <= d2 ? node->l : node->r;
+            second = d1 <= d2 ? node->r : node->l;
+        } else if (ir1)
+            first = node->l;
+        else if (ir2)
+            first = node->r;
+
+
+        if (first) {
+            closest = find_closest_object_bvh(r, s, first, dist, closest);
+            if (second && max(d1, d2) < *dist)
+                closest = find_closest_object_bvh(r, s, second, dist, closest);
+        }
+    }
+
+    return closest;
+}
+
+static scene_obj *find_closest_object(ray r, const scene *s,
+                                      vec3d *pos_out, double *dist,
+                                      render_options ropts)
+{
+    scene_obj *closest = NULL;
     *dist = DBL_MAX;
 
-    for (obj_p = s->objects; obj_p - s->objects < s->objects_cnt; obj_p++) {
-        if (!intersect_ray(r, obj_p, &pos, &cur_dist))
-            continue;
+    if (ropts.bvh_opts.use_bvh) {
+        closest = find_closest_object_bvh(r, s, s->bvh_root, dist, closest);    
+        *pos_out = vec3d_sum(r.orig, vec3d_scale(r.dir, *dist));
+    } else {
+        // @TODO: factor this out to also be used in bvh closest
+        scene_obj *obj_p;
+        double cur_dist;
+        vec3d pos;
+        for (obj_p = s->objects; obj_p - s->objects < s->objects_cnt; obj_p++) {
+            if (!intersect_ray(r, obj_p, &pos, &cur_dist))
+                continue;
 
-        if (cur_dist < *dist) {
-            *dist = cur_dist;
-            closest = obj_p;
-            *pos_out = pos;
+            if (cur_dist < *dist) {
+                *dist = cur_dist;
+                closest = obj_p;
+                *pos_out = pos;
+            }
         }
     }
 
@@ -249,7 +305,7 @@ vec3d trace_ray(ray r, const scene *s, int cur_depth, render_options ropts)
     // Avoid hitting yourself
     r.orig = vec3d_sum(r.orig, vec3d_scale(r.dir, EPSILON));
 
-    hit_obj = find_closest_object(r, s, &hit_point, &dist);
+    hit_obj = find_closest_object(r, s, &hit_point, &dist, ropts);
     if (!hit_obj)
         return vec3d_zero();
     hit_normal = get_normal(hit_point, hit_obj, r.orig);
