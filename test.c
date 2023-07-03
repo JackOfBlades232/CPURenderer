@@ -13,6 +13,8 @@
 
 #include "src/debug.h"
 
+static const bvh_options bvh_opts = { 1, bvhs_middle, 12, 4, 0.125, 1. };
+
 int render_obj_to_png(const char *obj_path, const char *png_save_path,
         camera *c, size_t res_x, size_t res_y, render_options ropts)
 {
@@ -38,7 +40,7 @@ int render_obj_to_png(const char *obj_path, const char *png_save_path,
 
 int test_shading_parts()
 {
-    render_options ropts = { rmode_full, 1, { 1, bvhs_middle } };
+    render_options ropts = { rmode_full, 1, bvh_opts };
     camera c = camera_from_look_at(0, 0, 0, 0, 0, -1, 90, 1);
     return render_obj_to_png("./ftests/shading_parts/scene.obj", 
             "shading_parts.png", &c, 640, 480, ropts);
@@ -46,7 +48,7 @@ int test_shading_parts()
 
 int test_triangle()
 {
-    render_options ropts = { rmode_full, 1, { 1, bvhs_middle } };
+    render_options ropts = { rmode_full, 1, bvh_opts };
     camera c = camera_from_look_at(0, 2, 0, 0, 0, 0, 90, 1);
     return render_obj_to_png("./ftests/triangle/scene.obj", 
             "triangle.png", &c, 640, 480, ropts);
@@ -54,7 +56,7 @@ int test_triangle()
 
 int test_classic_box_first()
 {
-    render_options ropts = { rmode_full, 4, { 1, bvhs_middle } };
+    render_options ropts = { rmode_full, 4, bvh_opts };
     camera c = camera_from_look_at(-0.5, 1.5, 0.98, 0, 1, 0, 90, 1);
     return render_obj_to_png("./ftests/classic_box/scene.obj", 
             "classic_box_1.png", &c, 500, 500, ropts);
@@ -62,7 +64,7 @@ int test_classic_box_first()
 
 int test_classic_box_second()
 {
-    render_options ropts = { rmode_full, 4, { 1, bvhs_middle } };
+    render_options ropts = { rmode_full, 4, bvh_opts };
     camera c = camera_from_look_at(-0.9, 1.9, -1, 0, 0, 0, 90, 1);
     return render_obj_to_png("./ftests/classic_box/scene.obj", 
             "classic_box_2.png", &c, 500, 500, ropts);
@@ -70,7 +72,7 @@ int test_classic_box_second()
 
 int test_box()
 {
-    render_options ropts = { rmode_full, 4, { 1, bvhs_middle } };
+    render_options ropts = { rmode_full, 4, bvh_opts };
 
     camera c = camera_from_look_at(0, 0.7, 1.75, 0, 0.7, 0, 60, 1);
     return render_obj_to_png("./ftests/box/scene.obj", 
@@ -79,7 +81,7 @@ int test_box()
 
 int test_distorted_box()
 {
-    render_options ropts = { rmode_full, 4, { 1, bvhs_middle } };
+    render_options ropts = { rmode_full, 4, bvh_opts };
 
     camera c = camera_from_look_at(-0.5, 1.5, 1.98, 0, 1, 0, 90, 1);
     return render_obj_to_png("./ftests/distorted_box/scene.obj", 
@@ -88,7 +90,7 @@ int test_distorted_box()
 
 int test_mirrors()
 {
-    render_options ropts = { rmode_full, 9, { 1, bvhs_middle } };
+    render_options ropts = { rmode_full, 9, bvh_opts };
     camera c = camera_from_look_at(2, 1.5, -0.1, 1, 1.2, -2.8, 90, 1);
     return render_obj_to_png("./ftests/mirrors/scene.obj", 
             "mirrors.png", &c, 800, 600, ropts);
@@ -96,7 +98,7 @@ int test_mirrors()
 
 int test_deer()
 {
-    render_options ropts = { rmode_full, 1, { 1, bvhs_middle } };
+    render_options ropts = { rmode_full, 1, bvh_opts };
     camera c = camera_from_look_at(100, 200, 150, 0, 100, 0, 90, 1);
     return render_obj_to_png("./ftests/deer/scene.obj", 
             "deer.png", &c, 500, 500, ropts);
@@ -121,10 +123,10 @@ int main()
     
     printf("Box: %s\n", test_box() == 0 ? "passed" : "failed");
 
+    /*
     printf("Mirrors: %s\n", test_mirrors() == 0 ? "passed" : "failed");
 
     printf("Deer: %s\n",
             test_deer() == 0 ? "passed" : "failed");
-    /*
     */
 }

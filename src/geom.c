@@ -111,18 +111,25 @@ vec3d vec3d_div(vec3d v1, vec3d v2)
     return vec3d_literal(v1.x/v2.x, v1.y/v2.y, v1.z/v2.z);
 }
 
-int vec3d_dim_comp(vec3d v1, vec3d v2, dim3d dim)
+double vec3d_get_dim(vec3d v, dim3d dim)
 {
     switch (dim) {
         case x:
-            return dbls_are_eq(v1.x, v2.x) ? 0 : (v1.x < v2.x ? 1 : -1);
+            return v.x;
         case y:
-            return dbls_are_eq(v1.y, v2.y) ? 0 : (v1.y < v2.y ? 1 : -1);
+            return v.y;
         case z:
-            return dbls_are_eq(v1.z, v2.z) ? 0 : (v1.z < v2.y ? 1 : -1);
+            return v.z;
     }
 
-    return 0;
+    return 0.;
+}
+
+int vec3d_dim_comp(vec3d v1, vec3d v2, dim3d dim)
+{
+    double d1 = vec3d_get_dim(v1, dim);
+    double d2 = vec3d_get_dim(v2, dim);
+    return dbl_is_zero(d1-d2) ? 0 : (d1 < d2 ? 1 : -1);
 }
 
 vec3d vec3d_reflect(vec3d v, vec3d normal)
@@ -168,16 +175,7 @@ dim3d bounds_max_dim(bounds b)
 
 double bounds_dim_spread(bounds b, dim3d dim)
 {
-    switch (dim) {
-        case x:
-            return b.max.x - b.min.x;
-        case y:
-            return b.max.y - b.min.y;
-        case z:
-            return b.max.z - b.min.z;
-    }
-
-    return 0.;
+    return vec3d_get_dim(b.max, dim) - vec3d_get_dim(b.min, dim);
 }
 
 vec3d bounds_center(bounds b)

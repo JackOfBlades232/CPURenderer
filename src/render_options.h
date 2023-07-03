@@ -7,13 +7,15 @@ typedef enum tag_render_mode {
 } render_mode;
 
 typedef enum tag_bvh_split_mode {
-    bvhs_middle, bvhs_equal, bvhs_sah
+    bvhs_middle, bvhs_sah
 } bvh_split_mode;
 
 typedef struct tag_bvh_options {
     int use_bvh;
     bvh_split_mode split_mode;
-    // @TODO: add SAH params
+    int num_buckets;
+    int max_objs_in_leaf;
+    double part_cost, leaf_cost;
 } bvh_options;
 
 typedef struct tag_render_options {

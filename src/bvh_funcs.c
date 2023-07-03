@@ -13,6 +13,11 @@ typedef struct tag_object_info {
     size_t idx;
 } object_info;
 
+typedef struct tag_bucket {
+    bounds b;
+    size_t obj_cnt;
+} bucket;
+
 static bounds get_bounds(const scene_obj *obj)
 {
     switch (obj->type) {
@@ -37,20 +42,18 @@ static vec3d get_centroid(const scene_obj *obj)
     return vec3d_zero();
 }
 
-static size_t partition_by_middle(object_info *obj_infos, 
-                                  size_t start, size_t end,
-                                  bounds cb, dim3d dim)
+static size_t partition_by_value_dummy(object_info *obj_infos, 
+                                       size_t start, size_t end,
+                                       vec3d dummy, dim3d dim)
 {
     if (start >= end+1)
         return start;
-
-    vec3d middle_dummy = bounds_center(cb);
 
     size_t l = start,
            r = end-1;
     int cmp_res;
     while (l < r) {
-        cmp_res = vec3d_dim_comp(middle_dummy, obj_infos[l].c, dim);
+        cmp_res = vec3d_dim_comp(dummy, obj_infos[l].c, dim);
         if (cmp_res > 0) {
             object_info tmp = obj_infos[r];
             obj_infos[r] = obj_infos[l];
@@ -61,6 +64,33 @@ static size_t partition_by_middle(object_info *obj_infos,
     }
 
     return cmp_res <= 0 ? l : l+1;
+
+}
+
+static size_t partition_by_middle(object_info *obj_infos, 
+                                  size_t start, size_t end,
+                                  bounds cb, dim3d dim)
+{
+    vec3d middle_dummy = bounds_center(cb);
+    return partition_by_value_dummy(obj_infos, start, end, middle_dummy, dim);
+}
+
+static size_t partition_by_sah(object_info *obj_infos, 
+                                      size_t start, size_t end,
+                                      bounds cb, dim3d dim,
+                                      bvh_options opts)
+{
+    bucket buckets[opts.num_buckets];
+    double spread = bounds_dim_spread(cb, dim);
+    double bucket_size = spread / opts.num_buckets;
+
+    int bucket_idx = 0;
+    for (size_t i = start; i < end; i++) {
+        object_info info = obj_infos[i];
+        // @INCOMPLETE
+    }
+
+    return 0;
 }
 
 static bvh_tree_node *recursive_bvh(object_info *obj_infos, 
@@ -126,10 +156,6 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
             mid = partition_by_middle(obj_infos, start, end, cb, split_dim);
             break;
 
-        case bvhs_equal:
-            // @TODO: impl
-            break;
-
         case bvhs_sah:
             // @TODO: impl
             break;
@@ -160,7 +186,6 @@ void construct_scene_bvh_tree(scene *s, bvh_options opts)
         infop->c = get_centroid(objp);
         infop->idx = i;
 
-        // @DEBUG
         /*
         if (objp->type == triangle)
             print_triangle_info(objp);

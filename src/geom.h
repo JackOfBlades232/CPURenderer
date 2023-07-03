@@ -52,6 +52,7 @@ double vec3d_len(vec3d v);
 vec3d vec3d_mul(vec3d v1, vec3d v2);
 vec3d vec3d_div(vec3d v1, vec3d v2);
 
+double vec3d_get_dim(vec3d v, dim3d dim);
 int vec3d_dim_comp(vec3d v1, vec3d v2, dim3d dim);
 
 vec3d vec3d_reflect(vec3d v, vec3d normal);
