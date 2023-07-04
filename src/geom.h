@@ -63,6 +63,7 @@ bounds bounds_add_point(bounds b, vec3d point);
 dim3d bounds_max_dim(bounds b);
 double bounds_dim_spread(bounds b, dim3d dim);
 vec3d bounds_center(bounds b);
+double bounds_area(bounds b);
 
 int intersect_with_bounds(ray r, bounds b, double *dist);
 

@@ -37,8 +37,8 @@ Improvements:
 Further improvements:
 - Improve speed with BVH
     * Impl BVH tree construction (untested)
-    - Impl find_closest_object with bvh tree (and test)
-    - Impl equal and SAH partitions
+    * Impl find_closest_object with bvh tree (and test)
+    - Impl SAH partition
     - Test on old and new objects
 - Uncomment vt reading and implement texturing
 - Go over not implemented features (@ in code)

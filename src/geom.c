@@ -183,6 +183,11 @@ vec3d bounds_center(bounds b)
     return vec3d_scale(vec3d_sum(b.min, b.max), 0.5);
 }
 
+double bounds_area(bounds b)
+{
+    return (b.max.x - b.min.x) * (b.max.y - b.min.y) * (b.max.z - b.min.z);
+}
+
 int intersect_with_bounds(ray r, bounds b, double *dist)
 {
     // Calculate the intersection t-s for all axis-aligned planes

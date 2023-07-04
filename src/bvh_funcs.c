@@ -3,6 +3,7 @@
 #include "geom.h"
 #include "mathd.h"
 #include <stdlib.h>
+#include <float.h>
 
 #include "debug.h"
 #include <stdio.h>
@@ -82,12 +83,14 @@ static size_t partition_by_sah(object_info *obj_infos,
                                       bvh_options opts)
 {
     bucket buckets[opts.num_buckets];
+    double lower_bound = vec3d_get_dim(cb.min, dim);
     double spread = bounds_dim_spread(cb, dim);
     double bucket_size = spread / opts.num_buckets;
 
-    for (int i = 0; i < sizeof(buckets); i++) {
+    for (int i = 0; i < opts.num_buckets; i++) {
+        buckets[i].b = bounds_from_point(vec3d_zero());
         buckets[i].obj_cnt = 0;
-        buckets[i].upper_bound = bucket_size * (i+1);
+        buckets[i].upper_bound = lower_bound + bucket_size * (i+1);
     }
 
     int bucket_idx = 0;
@@ -102,10 +105,64 @@ static size_t partition_by_sah(object_info *obj_infos,
         buckets[bucket_idx].obj_cnt++;
     }
 
-    // @TODO: go over all partitions, calc SAH (need surface area), 
-    // then do value partition against best
+    /*
+    for (int i = 0; i < opts.num_buckets; i++) {
+        printf("Bucket %d, prim cnt: %ld, upper plane: %lf, bounds:\n",
+               i, buckets[i].obj_cnt, buckets[i].upper_bound);
+        print_vec(buckets[i].b.min);
+        print_vec(buckets[i].b.max);
+        putchar('\n');
+    }
+    */
 
-    return 0;
+    double best_sah = DBL_MAX;
+    int best_idx = -1;
+
+    bounds b1, b2;
+    int c1 = 0, c2;
+    for (bucket_idx = 0; bucket_idx < opts.num_buckets-1; bucket_idx ++) {
+        if (buckets[bucket_idx].obj_cnt == 0)
+            continue;
+
+        if (c1 == 0) {
+            b1 = buckets[bucket_idx].b;
+            c1 = buckets[bucket_idx].obj_cnt;
+        } else {
+            b1 = bounds_union(b1, buckets[bucket_idx].b);
+            c1 += buckets[bucket_idx].obj_cnt;
+        }
+
+        c2 = 0;
+        for (int i = bucket_idx+2; i < opts.num_buckets; i++) {
+            if (buckets[i].obj_cnt == 0)
+                continue;
+            if (c2 == 0) {
+                b2 = buckets[i].b;
+                c2 = buckets[i].obj_cnt;
+            } else {
+                b2 = bounds_union(b2, buckets[i].b);
+                c2 += buckets[i].obj_cnt;
+            }
+        }
+
+        // @TODO: the bucket max z coords are 0 in shading parts, strange since
+        // they must be -0.35
+        double sa1 = bounds_area(b1);
+        double sa2 = bounds_area(b2);
+        double sa_tot = bounds_area(bounds_union(b1, b2)); // @TODO: clac once?
+        double sah = opts.part_cost + opts.inter_cost*(sa1*c1 + sa2*c2) / sa_tot;
+
+        if (sah < best_sah) {
+            best_sah = sah;
+            best_idx = bucket_idx;
+        }
+    }
+
+    // @TODO: comp with max_l_in_obj/leaf cost?
+
+    double split_plane = buckets[best_idx].upper_bound;
+    vec3d dummy = vec3d_literal(split_plane, split_plane, split_plane);
+    return partition_by_value_dummy(obj_infos, start, end, dummy, dim);
 }
 
 static bvh_tree_node *recursive_bvh(object_info *obj_infos, 
@@ -133,7 +190,8 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
     print_vec(node->b.max);
     */
 
-    if (end == start+1) {
+    if (end == start+1 ||
+            (opts.split_mode == bvhs_sah && end <= start + opts.max_objs_in_leaf)) { // @TEMP
         // @TODO: check writes range?
         node->first_obj_offset = *ordered_write_idx;
         for (size_t i = start; i < end; i++)
@@ -172,7 +230,7 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
             break;
 
         case bvhs_sah:
-            // @TODO: impl
+            mid = partition_by_sah(obj_infos, start, end, cb, split_dim, opts);
             break;
     }
 
@@ -187,8 +245,7 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
 
 void construct_scene_bvh_tree(scene *s, bvh_options opts)
 {
-    if (!opts.use_bvh 
-            || opts.split_mode != bvhs_middle) { //  @TEST
+    if (!opts.use_bvh) {
         s->bvh_root = NULL;
         return;
     }

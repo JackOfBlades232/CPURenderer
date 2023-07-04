@@ -13,7 +13,8 @@
 
 #include "src/debug.h"
 
-static const bvh_options bvh_opts = { 1, bvhs_middle, 12, 4, 0.125, 1. };
+//static const bvh_options bvh_opts = { 1, bvhs_middle, 12, 1, 0.125, 1. };
+static const bvh_options bvh_opts = { 1, bvhs_sah, 12, 1, 0.125, 1. };
 
 int render_obj_to_png(const char *obj_path, const char *png_save_path,
         camera *c, size_t res_x, size_t res_y, render_options ropts)
@@ -113,6 +114,7 @@ int main()
     printf("Triangle: %s\n",
             test_triangle() == 0 ? "passed" : "failed");
 
+    /*
     printf("Classic box 1: %s\n",
            test_classic_box_first() == 0 ? "passed" : "failed");
     printf("Classic box 2: %s\n",
@@ -123,7 +125,6 @@ int main()
     
     printf("Box: %s\n", test_box() == 0 ? "passed" : "failed");
 
-    /*
     printf("Mirrors: %s\n", test_mirrors() == 0 ? "passed" : "failed");
 
     printf("Deer: %s\n",
