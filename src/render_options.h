@@ -16,6 +16,7 @@ typedef struct tag_bvh_options {
     int num_buckets;
     int max_objs_in_leaf;
     double part_cost, inter_cost;
+    int max_objs_for_mid;
 } bvh_options;
 
 typedef struct tag_render_options {

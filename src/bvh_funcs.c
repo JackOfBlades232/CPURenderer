@@ -78,10 +78,13 @@ static size_t partition_by_middle(object_info *obj_infos,
 }
 
 static size_t partition_by_sah(object_info *obj_infos, 
-                                      size_t start, size_t end,
-                                      bounds cb, dim3d dim,
-                                      bvh_options opts)
+                               size_t start, size_t end,
+                               bounds cb, dim3d dim,
+                               bvh_options opts)
 {
+    if (end-start <= opts.max_objs_for_mid)
+        return partition_by_middle(obj_infos, start, end, cb, dim);
+
     bucket buckets[opts.num_buckets];
     double lower_bound = vec3d_get_dim(cb.min, dim);
     double spread = bounds_dim_spread(cb, dim);
@@ -158,7 +161,10 @@ static size_t partition_by_sah(object_info *obj_infos,
         }
     }
 
-    // @TODO: comp with max_l_in_obj/leaf cost?
+    // If it is deemed cheaper to just linearly iterate over all objects,
+    // just pack it all as a leaf
+    if (best_sah > opts.inter_cost * (end-start))
+        return start;
 
     double split_plane = buckets[best_idx].upper_bound;
     vec3d dummy = vec3d_literal(split_plane, split_plane, split_plane);
@@ -190,8 +196,7 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
     print_vec(node->b.max);
     */
 
-    if (end == start+1 ||
-            (opts.split_mode == bvhs_sah && end <= start + opts.max_objs_in_leaf)) { // @TEMP
+    if (end <= start + opts.max_objs_in_leaf) {
         // @TODO: check writes range?
         node->first_obj_offset = *ordered_write_idx;
         for (size_t i = start; i < end; i++)
@@ -232,6 +237,16 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
         case bvhs_sah:
             mid = partition_by_sah(obj_infos, start, end, cb, split_dim, opts);
             break;
+    }
+    
+    if (mid <= start) {
+        // @TODO: factor out (?)
+        node->first_obj_offset = *ordered_write_idx;
+        for (size_t i = start; i < end; i++)
+            ordered_objects[(*ordered_write_idx)++] = objects[obj_infos[i].idx];
+        node->obj_cnt = *ordered_write_idx - node->first_obj_offset;
+
+        return node;
     }
 
     //printf("Kidz:\n");
