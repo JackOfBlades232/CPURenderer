@@ -13,7 +13,7 @@
 
 #include "src/debug.h"
 
-static const bvh_options bvh_opts = { 1, bvhs_sah, 12, 1, 0.125, 1., 4 };
+static const bvh_options bvh_opts = { 1, bvhs_sah, 12, 1, 0.125, 1., 1 };
 
 int render_obj_to_png(const char *obj_path, const char *png_save_path,
         camera *c, size_t res_x, size_t res_y, render_options ropts)

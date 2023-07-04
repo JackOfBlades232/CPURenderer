@@ -104,8 +104,13 @@ static size_t partition_by_sah(object_info *obj_infos,
         while (c_dim >= buckets[bucket_idx].upper_bound + EPSILON)
             bucket_idx++;
 
-        buckets[bucket_idx].b = bounds_union(buckets[bucket_idx].b, info.b);
-        buckets[bucket_idx].obj_cnt++;
+        bucket *bucket_p = buckets + bucket_idx;
+        if (bucket_p->obj_cnt == 0)
+            bucket_p->b = info.b;
+        else
+            bucket_p->b = bounds_union(bucket_p->b, info.b);
+
+        bucket_p->obj_cnt++;
     }
 
     /*
