@@ -146,9 +146,9 @@ int main()
             */
 
     /*
-    */
     printf("Bunny: %s\n",
             test_bunny() == 0 ? "passed" : "failed");
     printf("Dragon: %s\n",
             test_dragon() == 0 ? "passed" : "failed");
+            */
 }

@@ -35,11 +35,11 @@ Improvements:
 * Fix dull colors in refraction (all colors are somehow toned down)
 
 Further improvements:
-- Improve speed with BVH
+* Improve speed with BVH
     * Impl BVH tree construction (untested)
     * Impl find_closest_object with bvh tree (and test)
     * Impl SAH partition
-    - Improve SAH partition stopping criteria
-    - Test on old and new objects
+    * Improve SAH partition stopping criteria
+    * Test on old and new objects
 - Uncomment vt reading and implement texturing
-- Go over not implemented features (@ in code)
+- Go over TODOs and other @
