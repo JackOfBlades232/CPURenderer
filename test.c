@@ -13,7 +13,7 @@
 
 #include "src/debug.h"
 
-static const bvh_options bvh_opts = { 1, bvhs_sah, 12, 1, 0.125, 1., 1 };
+static const bvh_options bvh_opts = { 1, bvhs_sah, 28, 32, 0.125, 1., 4 };
 
 int render_obj_to_png(const char *obj_path, const char *png_save_path,
         camera *c, size_t res_x, size_t res_y, render_options ropts)
@@ -104,16 +104,31 @@ int test_deer()
             "deer.png", &c, 500, 500, ropts);
 }
 
+// Large tests
+int test_bunny()
+{
+    render_options ropts = { rmode_full, 1, bvh_opts };
+    camera c = camera_from_look_at(-0.8, 1.0, 1.4, -0.2, 0.9, 0.0, 90, 1);
+    return render_obj_to_png("./ftests/bunny/scene.obj", 
+            "bunny.png", &c, 1024, 768, ropts);
+}
+
+int test_dragon()
+{
+    render_options ropts = { rmode_full, 1, bvh_opts };
+    camera c = camera_from_look_at(-1.1, 0.6, -0.5, 0.20702, -0.26424, 0.214467, 45, 1);
+    return render_obj_to_png("./ftests/dragon/scene.obj", 
+            "dragon.png", &c, 1024, 768, ropts);
+}
+
 int main()
 {
     /*
-    */
     printf("Shading parts: %s\n",
             test_shading_parts() == 0 ? "passed" : "failed");
     printf("Triangle: %s\n",
             test_triangle() == 0 ? "passed" : "failed");
 
-    /*
     printf("Classic box 1: %s\n",
            test_classic_box_first() == 0 ? "passed" : "failed");
     printf("Classic box 2: %s\n",
@@ -128,5 +143,12 @@ int main()
 
     printf("Deer: %s\n",
             test_deer() == 0 ? "passed" : "failed");
+            */
+
+    /*
     */
+    printf("Bunny: %s\n",
+            test_bunny() == 0 ? "passed" : "failed");
+    printf("Dragon: %s\n",
+            test_dragon() == 0 ? "passed" : "failed");
 }

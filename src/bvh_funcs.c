@@ -107,21 +107,11 @@ static size_t partition_by_sah(object_info *obj_infos,
         bucket *bucket_p = buckets + bucket_idx;
         if (bucket_p->obj_cnt == 0)
             bucket_p->b = info.b;
-        else
+        else 
             bucket_p->b = bounds_union(bucket_p->b, info.b);
 
         bucket_p->obj_cnt++;
     }
-
-    /*
-    for (int i = 0; i < opts.num_buckets; i++) {
-        printf("Bucket %d, prim cnt: %ld, upper plane: %lf, bounds:\n",
-               i, buckets[i].obj_cnt, buckets[i].upper_bound);
-        print_vec(buckets[i].b.min);
-        print_vec(buckets[i].b.max);
-        putchar('\n');
-    }
-    */
 
     double best_sah = DBL_MAX;
     int best_idx = -1;
@@ -153,8 +143,6 @@ static size_t partition_by_sah(object_info *obj_infos,
             }
         }
 
-        // @TODO: the bucket max z coords are 0 in shading parts, strange since
-        // they must be -0.35
         double sa1 = bounds_area(b1);
         double sa2 = bounds_area(b2);
         double sa_tot = bounds_area(bounds_union(b1, b2)); // @TODO: clac once?
@@ -166,10 +154,10 @@ static size_t partition_by_sah(object_info *obj_infos,
         }
     }
 
-    // If it is deemed cheaper to just linearly iterate over all objects,
-    // just pack it all as a leaf
-    if (best_sah > opts.inter_cost * (end-start))
+    if (end-start <= opts.max_objs_in_leaf &&
+            best_sah > opts.inter_cost * (end-start)) {
         return start;
+    }
 
     double split_plane = buckets[best_idx].upper_bound;
     vec3d dummy = vec3d_literal(split_plane, split_plane, split_plane);
@@ -194,14 +182,7 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
     for (size_t i = start+1; i < end; i++)
         node->b = bounds_union(node->b, obj_infos[i].b);
 
-    /*
-    printf("\nNum objects: %ld\n", end-start);
-    printf("------------------------------\nBounds:\n");
-    print_vec(node->b.min);
-    print_vec(node->b.max);
-    */
-
-    if (end <= start + opts.max_objs_in_leaf) {
+    if (end <= start+1) {
         // @TODO: check writes range?
         node->first_obj_offset = *ordered_write_idx;
         for (size_t i = start; i < end; i++)
@@ -214,12 +195,6 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
     bounds cb = bounds_from_point(obj_infos[start].c);
     for (size_t i = start+1; i < end; i++)
         cb = bounds_add_point(cb, obj_infos[i].c);
-
-    /*
-    printf("\n------------------------------\nCentroid bounds:\n");
-    print_vec(cb.min);
-    print_vec(cb.max);
-    */
 
     dim3d split_dim = bounds_max_dim(cb);
     double c_spread = bounds_dim_spread(cb, split_dim);
@@ -254,7 +229,6 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
         return node;
     }
 
-    //printf("Kidz:\n");
     node->l = recursive_bvh(obj_infos, start, mid,
                             ordered_objects, ordered_write_idx, objects, opts);
     node->r = recursive_bvh(obj_infos, mid, end,
@@ -277,23 +251,6 @@ void construct_scene_bvh_tree(scene *s, bvh_options opts)
         infop->b = get_bounds(objp);
         infop->c = get_centroid(objp);
         infop->idx = i;
-
-        /*
-        if (objp->type == triangle)
-            print_triangle_info(objp);
-        else {
-            printf("Sphere\n center: ");
-            print_vec(objp->data.s.center);
-            printf("radius: %lf\n", objp->data.s.rad);
-        }
-
-        printf("Bounds: \n");
-        print_vec(info.b.min);
-        print_vec(info.b.max);
-        printf("Centroid: \n");
-        print_vec(info.c);
-        printf("\n\n");
-        */
     }
 
     scene_obj *ordered_objects = 
