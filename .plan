@@ -43,3 +43,6 @@ Further improvements:
     * Test on old and new objects
 - Uncomment vt reading and implement texturing
 - Go over TODOs and other @
+
+Bugs:
+- In the dragon test there are missing pixels, might be edge cases in bvh/box intersections 
