@@ -59,8 +59,6 @@ int render(const scene *s, const camera *c, render_options ropts, image *img)
 
             // Negating image inversion
             set_img_pixel(img, color, x, img->height-y-1);
-
-            printf("Completed %d/%d pixels\n", x*img->height+y+1, img->width*img->height);
         }
 
     post_process(img, ropts.mode);

@@ -1,7 +1,7 @@
 SRCMODULES = $(shell find src -type f -name '*.c')
 OBJMODULES = $(SRCMODULES:.c=.o)
 CC = gcc
-CFLAGS = -g -Wall -I ~/Utils/headers/
+CFLAGS = -g -Wall -I ~/Utils/headers/ -O3
 LFLAGS = -lm -lpng -l:libtokeniz.a -L ~/Utils/lib/
 
 %.o: %.c %.h

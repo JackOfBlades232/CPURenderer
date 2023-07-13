@@ -53,7 +53,7 @@ static size_t partition_by_value_dummy(object_info *obj_infos,
 
     size_t l = start,
            r = end-1;
-    int cmp_res;
+    int cmp_res = 0;
     while (l < r) {
         cmp_res = vec3d_dim_comp(dummy, obj_infos[l].c, dim);
         if (cmp_res > 0) {
@@ -208,7 +208,7 @@ static bvh_tree_node *recursive_bvh(object_info *obj_infos,
         return node;
     }
     
-    size_t mid;
+    size_t mid = start;
     switch (opts.split_mode) {
         case bvhs_middle:
             mid = partition_by_middle(obj_infos, start, end, cb, split_dim);

@@ -124,6 +124,7 @@ int test_dragon()
 int main()
 {
     /*
+    */
     printf("Shading parts: %s\n",
             test_shading_parts() == 0 ? "passed" : "failed");
     printf("Triangle: %s\n",
@@ -143,7 +144,6 @@ int main()
 
     printf("Deer: %s\n",
             test_deer() == 0 ? "passed" : "failed");
-            */
 
     /*
     printf("Bunny: %s\n",
